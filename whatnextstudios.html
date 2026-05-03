@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>What Next Studios — Creative Agency</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100;0,9..144,200;0,9..144,300;1,9..144,100;1,9..144,200;1,9..144,300&family=Figtree:wght@200;300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --black:   #0a0a0a;
+      --off-black: #111111;
+      --dark:    #1a1a1a;
+      --grey:    #2a2a2a;
+      --mid:     #888888;
+      --light:   #c8c8c8;
+      --white:   #f5f5f0;
+      --gold:    #c9a84c;
+      --gold-lt: #e2c06a;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Figtree', sans-serif;
+      font-weight: 300;
+      letter-spacing: 0.01em;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ── CUSTOM CURSOR ── */
+    .cursor {
+      position: fixed; width: 8px; height: 8px;
+      background: var(--gold); border-radius: 50%;
+      pointer-events: none; z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s, height 0.3s, background 0.3s;
+    }
+    .cursor-ring {
+      position: fixed; width: 36px; height: 36px;
+      border: 1px solid rgba(201,168,76,0.4);
+      border-radius: 50%; pointer-events: none; z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: all 0.12s ease;
+    }
+    body:hover .cursor { opacity: 1; }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 1; opacity: 0.5;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.8rem 3.5rem;
+      mix-blend-mode: normal;
+    }
+    .nav-logo {
+      display: flex; align-items: center;
+      line-height: 1;
+    }
+    .nav-logo svg, .footer-logo svg { display: block; }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.65rem; font-weight: 300;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--mid); text-decoration: none;
+      transition: color 0.4s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-cta {
+      font-size: 0.65rem; font-weight: 300;
+      letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--black); background: var(--gold);
+      padding: 0.6rem 1.4rem; text-decoration: none;
+      transition: background 0.3s, color 0.3s;
+    }
+    .nav-cta:hover { background: var(--gold-lt); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 3.5rem 5rem;
+      position: relative; overflow: hidden;
+    }
+
+    /* BG grid lines */
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(201,168,76,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,168,76,0.05) 1px, transparent 1px);
+      background-size: 80px 80px;
+      pointer-events: none;
+    }
+
+    .hero-index {
+      position: absolute; top: 50%; right: 3.5rem;
+      transform: translateY(-50%);
+      font-family: 'Fraunces', serif;
+      font-size: 22vw; font-weight: 100; font-style: italic;
+      font-variation-settings: 'opsz' 144;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(201,168,76,0.07);
+      line-height: 1; pointer-events: none;
+      user-select: none;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.6rem; font-weight: 200;
+      letter-spacing: 0.38em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1.5rem;
+      display: flex; align-items: center; gap: 1rem;
+      opacity: 0; animation: fadeUp 1s 0.3s forwards;
+    }
+    .hero-eyebrow::before { content: ''; width: 2.5rem; height: 1px; background: var(--gold); }
+
+    .hero-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(4rem, 9vw, 9.5rem);
+      font-weight: 200; line-height: 0.9;
+      letter-spacing: -0.03em;
+      font-variation-settings: 'opsz' 144;
+      opacity: 0; animation: fadeUp 1s 0.5s forwards;
+    }
+    .hero-title em { font-style: italic; color: var(--light); font-weight: 100; }
+
+    .hero-bottom {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      margin-top: 3rem;
+      opacity: 0; animation: fadeUp 1s 0.8s forwards;
+    }
+    .hero-desc {
+      font-size: 0.82rem; font-weight: 200;
+      line-height: 2.1; color: var(--mid);
+      max-width: 300px; letter-spacing: 0.03em;
+    }
+    .hero-scroll {
+      display: flex; align-items: center; gap: 0.8rem;
+      font-size: 0.62rem; font-weight: 400;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--mid);
+    }
+    .scroll-line {
+      width: 1px; height: 48px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: scrollAnim 2s ease-in-out infinite;
+    }
+    @keyframes scrollAnim { 0%,100%{opacity:0.3} 50%{opacity:1} }
+
+    /* ── MARQUEE ── */
+    .marquee-wrap {
+      overflow: hidden;
+      border-top: 1px solid var(--grey);
+      border-bottom: 1px solid var(--grey);
+      padding: 1rem 0;
+      position: relative; z-index: 2;
+    }
+    .marquee-track {
+      display: flex; gap: 3rem;
+      animation: marquee 20s linear infinite;
+      white-space: nowrap;
+    }
+    .marquee-track span {
+      font-family: 'Figtree', sans-serif;
+      font-size: 0.65rem; font-style: normal;
+      font-weight: 200; letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--mid); flex-shrink: 0;
+    }
+    .marquee-track .dot { color: var(--gold); font-style: normal; }
+    @keyframes marquee { to { transform: translateX(-50%); } }
+
+    /* ── SECTION BASE ── */
+    section { position: relative; z-index: 2; }
+    .section-num {
+      font-family: 'Figtree', sans-serif;
+      font-size: 0.6rem; font-weight: 200;
+      letter-spacing: 0.35em; color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+    .section-label {
+      font-size: 0.58rem; font-weight: 200;
+      letter-spacing: 0.35em; text-transform: uppercase;
+      color: var(--mid); margin-bottom: 3rem;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .section-label::after { content: ''; flex: 1; max-width: 3rem; height: 1px; background: var(--grey); }
+    .big-title {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2.8rem, 5.5vw, 5rem);
+      font-weight: 200; line-height: 0.97;
+      letter-spacing: -0.025em;
+      font-variation-settings: 'opsz' 72;
+    }
+    .big-title em { font-style: italic; color: var(--light); font-weight: 100; font-variation-settings: 'opsz' 72; }
+
+    /* ── ABOUT ── */
+    .about {
+      padding: 8rem 3.5rem;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 6rem; align-items: center;
+    }
+    .about-left { position: relative; }
+    .about-img {
+      width: 100%; aspect-ratio: 3/4;
+      background: var(--dark);
+      border: 1px solid var(--grey);
+      position: relative; overflow: hidden;
+    }
+    .about-img::before {
+      content: 'T';
+      font-family: 'Fraunces', serif;
+      font-size: 20rem; font-weight: 300; font-style: italic;
+      color: rgba(201,168,76,0.07);
+      position: absolute; bottom: -2rem; right: -1rem;
+      line-height: 1;
+    }
+    .about-img-label {
+      position: absolute; bottom: 1.5rem; left: 1.5rem;
+      font-size: 0.62rem; font-weight: 400;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--mid);
+    }
+    .about-tag {
+      position: absolute; top: -1px; right: -1px;
+      background: var(--gold);
+      color: var(--black);
+      font-size: 0.6rem; font-weight: 500;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      padding: 0.4rem 0.8rem;
+    }
+
+    .about-right {}
+    .about-body {
+      font-size: 0.88rem; font-weight: 200;
+      line-height: 2.2; color: var(--light);
+      margin: 2rem 0 3rem;
+      letter-spacing: 0.02em;
+    }
+    .about-stats {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 2rem; border-top: 1px solid var(--grey); padding-top: 2.5rem;
+    }
+    .astat-num {
+      font-family: 'Figtree', sans-serif;
+      font-size: 2.4rem; font-weight: 100;
+      color: var(--gold); line-height: 1;
+      display: block; letter-spacing: -0.02em;
+    }
+    .astat-label {
+      font-size: 0.58rem; font-weight: 200;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--mid); margin-top: 0.4rem;
+      display: block;
+    }
+
+    /* ── SERVICES ── */
+    .services {
+      padding: 8rem 3.5rem;
+      border-top: 1px solid var(--grey);
+    }
+    .services-header {
+      display: flex; justify-content: space-between;
+      align-items: flex-end; margin-bottom: 5rem;
+    }
+    .services-list { display: flex; flex-direction: column; }
+    .service-row {
+      display: grid; grid-template-columns: 80px 1fr auto auto;
+      align-items: center; gap: 2rem;
+      padding: 2.2rem 0;
+      border-bottom: 1px solid var(--grey);
+      cursor: pointer; position: relative;
+      transition: padding-left 0.4s;
+      group: true;
+    }
+    .service-row::before {
+      content: '';
+      position: absolute; left: 0; top: 0;
+      width: 0; height: 100%;
+      background: linear-gradient(90deg, rgba(201,168,76,0.06), transparent);
+      transition: width 0.5s;
+    }
+    .service-row:hover::before { width: 100%; }
+    .service-row:hover { padding-left: 1rem; }
+    .service-row:first-child { border-top: 1px solid var(--grey); }
+
+    .svc-num {
+      font-family: 'Figtree', sans-serif;
+      font-size: 0.6rem; font-weight: 200;
+      color: var(--mid); letter-spacing: 0.3em;
+    }
+    .svc-name {
+      font-family: 'Fraunces', serif;
+      font-size: 1.8rem; font-weight: 200;
+      font-variation-settings: 'opsz' 48;
+      color: var(--white); letter-spacing: -0.01em;
+      transition: color 0.3s;
+    }
+    .service-row:hover .svc-name { color: var(--gold-lt); }
+    .svc-tags {
+      display: flex; gap: 0.5rem; flex-wrap: wrap;
+    }
+    .svc-tag {
+      font-size: 0.55rem; font-weight: 200;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      border: 1px solid var(--grey); color: var(--mid);
+      padding: 0.25rem 0.6rem;
+      transition: border-color 0.3s, color 0.3s;
+    }
+    .service-row:hover .svc-tag { border-color: var(--gold); color: var(--gold); }
+    .svc-arrow {
+      font-size: 1rem; color: var(--grey);
+      transition: color 0.3s, transform 0.3s;
+    }
+    .service-row:hover .svc-arrow { color: var(--gold); transform: translateX(6px); }
+
+    /* ── WORK / PORTFOLIO ── */
+    .work {
+      padding: 8rem 3.5rem;
+      border-top: 1px solid var(--grey);
+    }
+    .work-header {
+      display: flex; justify-content: space-between;
+      align-items: flex-end; margin-bottom: 4rem;
+    }
+    .work-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1.5px; background: var(--grey);
+    }
+    .work-item {
+      background: var(--off-black);
+      aspect-ratio: 4/3; position: relative;
+      overflow: hidden; cursor: pointer;
+    }
+    .work-item:first-child { aspect-ratio: 8/5; grid-column: span 2; }
+    .work-bg {
+      width: 100%; height: 100%;
+      transition: transform 0.7s ease;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .work-item:hover .work-bg { transform: scale(1.05); }
+    .wi-1 { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); }
+    .wi-2 { background: linear-gradient(135deg, #1a0a0a 0%, #2d1515 50%, #4a1515 100%); }
+    .wi-3 { background: linear-gradient(135deg, #0a1a0a 0%, #152d15 50%, #1a3d1a 100%); }
+    .wi-4 { background: linear-gradient(135deg, #1a1510 0%, #2d2515 50%, #3d3015 100%); }
+    .work-letter {
+      font-family: 'Fraunces', serif;
+      font-size: 8rem; font-weight: 100; font-style: italic;
+      font-variation-settings: 'opsz' 144;
+      color: rgba(255,255,255,0.04); user-select: none;
+    }
+    .work-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 60%);
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 2rem;
+      opacity: 0; transition: opacity 0.4s;
+    }
+    .work-item:hover .work-overlay { opacity: 1; }
+    .work-title {
+      font-family: 'Fraunces', serif;
+      font-size: 1.6rem; font-weight: 200;
+      font-variation-settings: 'opsz' 48;
+      color: var(--white); margin-bottom: 0.3rem; letter-spacing: -0.01em;
+    }
+    .work-cat {
+      font-size: 0.58rem; font-weight: 200;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--gold);
+    }
+    .work-badge {
+      position: absolute; top: 1.5rem; right: 1.5rem;
+      font-size: 0.58rem; font-weight: 400;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      background: rgba(201,168,76,0.18);
+      border: 1px solid rgba(201,168,76,0.35);
+      color: var(--gold); padding: 0.3rem 0.7rem;
+      backdrop-filter: blur(4px);
+    }
+
+    /* ── PROCESS ── */
+    .process {
+      padding: 8rem 3.5rem;
+      border-top: 1px solid var(--grey);
+      background: var(--off-black);
+    }
+    .process-header { margin-bottom: 5rem; }
+    .process-steps {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 0; position: relative;
+    }
+    .process-steps::before {
+      content: '';
+      position: absolute; top: 1.8rem; left: 0; right: 0;
+      height: 1px; background: var(--grey);
+    }
+    .process-step { padding: 0 2rem 0 0; padding-top: 0; }
+    .step-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--gold); margin-bottom: 2rem;
+      position: relative; z-index: 1;
+      box-shadow: 0 0 0 4px var(--off-black), 0 0 0 5px var(--gold);
+    }
+    .step-n {
+      font-family: 'Figtree', sans-serif;
+      font-size: 0.58rem; font-weight: 200;
+      color: var(--mid); letter-spacing: 0.3em;
+      margin-bottom: 1rem; display: block;
+    }
+    .step-title {
+      font-family: 'Figtree', sans-serif;
+      font-size: 0.95rem; font-weight: 300;
+      color: var(--white); margin-bottom: 0.8rem;
+      letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .step-desc {
+      font-size: 0.8rem; font-weight: 200;
+      line-height: 2; color: var(--mid);
+      letter-spacing: 0.02em;
+    }
+
+    /* ── PRICING ── */
+    .pricing {
+      padding: 8rem 3.5rem;
+      border-top: 1px solid var(--grey);
+    }
+    .pricing-header { margin-bottom: 5rem; }
+    .pricing-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1px; background: var(--grey);
+    }
+    .price-card {
+      background: var(--black);
+      padding: 3rem 2.5rem;
+      position: relative; overflow: hidden;
+      transition: background 0.4s;
+    }
+    .price-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 2px;
+      background: transparent;
+      transition: background 0.4s;
+    }
+    .price-card:hover { background: var(--off-black); }
+    .price-card:hover::before { background: var(--gold); }
+    .price-card.highlight { background: var(--dark); }
+    .price-card.highlight::before { background: var(--gold); }
+
+    .pc-label {
+      font-size: 0.57rem; font-weight: 200;
+      letter-spacing: 0.32em; text-transform: uppercase;
+      color: var(--mid); margin-bottom: 1.5rem; display: block;
+    }
+    .price-card.highlight .pc-label { color: var(--gold); }
+    .pc-name {
+      font-family: 'Figtree', sans-serif;
+      font-size: 1rem; font-weight: 300;
+      color: var(--white); margin-bottom: 2rem;
+      letter-spacing: 0.18em; text-transform: uppercase;
+    }
+    .pc-price {
+      font-family: 'Figtree', sans-serif;
+      font-size: 3.2rem; font-weight: 100;
+      color: var(--gold); line-height: 1; letter-spacing: -0.02em;
+    }
+    .pc-price sup { font-size: 1.2rem; vertical-align: super; }
+    .pc-per { font-size: 0.65rem; font-weight: 200; color: var(--mid); margin: 0.3rem 0 2.5rem; letter-spacing: 0.12em; }
+    .pc-divider { height: 1px; background: var(--grey); margin-bottom: 2rem; }
+    .pc-features { list-style: none; display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 2.5rem; }
+    .pc-features li {
+      font-size: 0.8rem; font-weight: 200;
+      color: var(--light); letter-spacing: 0.02em;
+      display: flex; align-items: center; gap: 0.7rem;
+    }
+    .pc-features li::before { content: '—'; color: var(--gold); flex-shrink: 0; font-size: 0.7rem; }
+    .pc-btn {
+      display: block; width: 100%;
+      padding: 0.9rem; text-align: center;
+      font-size: 0.6rem; font-weight: 200;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      border: 1px solid var(--grey); color: var(--mid);
+      text-decoration: none; cursor: pointer;
+      background: transparent;
+      transition: all 0.3s;
+    }
+    .pc-btn:hover, .price-card.highlight .pc-btn { border-color: var(--gold); color: var(--gold); }
+    .price-card.highlight .pc-btn:hover { background: var(--gold); color: var(--black); }
+
+    /* ── CONTACT ── */
+    .contact {
+      padding: 8rem 3.5rem;
+      border-top: 1px solid var(--grey);
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 8rem; align-items: start;
+    }
+    .contact-left {}
+    .contact-sub {
+      font-size: 0.82rem; font-weight: 200;
+      line-height: 2.1; color: var(--mid);
+      margin: 2rem 0 3.5rem; letter-spacing: 0.03em;
+      max-width: 340px;
+    }
+    .contact-links { display: flex; flex-direction: column; gap: 1px; }
+    .contact-link {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.4rem 0;
+      border-bottom: 1px solid var(--grey);
+      text-decoration: none;
+      transition: padding-left 0.3s;
+    }
+    .contact-link:first-child { border-top: 1px solid var(--grey); }
+    .contact-link:hover { padding-left: 0.5rem; }
+    .cl-label { font-size: 0.58rem; font-weight: 200; letter-spacing: 0.28em; text-transform: uppercase; color: var(--mid); }
+    .cl-val { font-family: 'Figtree', sans-serif; font-size: 0.82rem; font-weight: 200; color: var(--light); font-style: normal; letter-spacing: 0.06em; }
+    .cl-arrow { color: var(--grey); transition: color 0.3s; font-size: 0.8rem; letter-spacing: 0.1em; }
+    .contact-link:hover .cl-arrow { color: var(--gold); }
+
+    .contact-form { display: flex; flex-direction: column; gap: 0; }
+    .cf-group {
+      display: flex; flex-direction: column;
+      border-bottom: 1px solid var(--grey);
+      padding: 1.5rem 0;
+    }
+    .cf-group:first-child { border-top: 1px solid var(--grey); }
+    .cf-label {
+      font-size: 0.55rem; font-weight: 200;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--mid); margin-bottom: 0.6rem;
+    }
+    .cf-input, .cf-select, .cf-textarea {
+      background: transparent; border: none; outline: none;
+      color: var(--white); font-family: 'Figtree', sans-serif;
+      font-size: 0.88rem; font-weight: 200;
+      letter-spacing: 0.03em; width: 100%;
+      caret-color: var(--gold);
+    }
+    .cf-input::placeholder, .cf-textarea::placeholder { color: var(--grey); }
+    .cf-select { cursor: pointer; }
+    .cf-select option { background: var(--black); }
+    .cf-textarea { resize: none; min-height: 100px; line-height: 1.9; }
+    .cf-row { display: grid; grid-template-columns: 1fr 1fr; }
+    .cf-row .cf-group:first-child { border-right: 1px solid var(--grey); padding-right: 2rem; }
+    .cf-row .cf-group:last-child { padding-left: 2rem; }
+
+    .cf-submit {
+      margin-top: 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 1.5rem;
+      background: var(--gold);
+      border: none; cursor: pointer;
+      transition: background 0.3s;
+    }
+    .cf-submit:hover { background: var(--gold-lt); }
+    .cf-submit-text {
+      font-size: 0.63rem; font-weight: 300;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--black);
+    }
+    .cf-submit-arrow { color: var(--black); font-size: 1rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 2.5rem 3.5rem;
+      border-top: 1px solid var(--grey);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-logo { display: flex; align-items: center; line-height: 1; }
+    .footer-copy {
+      font-size: 0.55rem; font-weight: 200;
+      letter-spacing: 0.18em; color: var(--grey);
+    }
+    .footer-links { display: flex; gap: 2rem; }
+    .footer-links a {
+      font-size: 0.57rem; font-weight: 200;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--grey); text-decoration: none;
+      transition: color 0.3s;
+    }
+    .footer-links a:hover { color: var(--gold); }
+
+    /* ── PRICING TABS ── */
+    .pricing-tabs {
+      display: flex; gap: 0;
+      margin-bottom: 3.5rem;
+      border-bottom: 1px solid var(--grey);
+    }
+    .ptab {
+      background: transparent; border: none;
+      padding: 0.9rem 2rem;
+      font-family: 'Figtree', sans-serif;
+      font-size: 0.62rem; font-weight: 200;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--mid); cursor: pointer;
+      position: relative; transition: color 0.3s;
+    }
+    .ptab::after {
+      content: '';
+      position: absolute; bottom: -1px; left: 0;
+      width: 100%; height: 1px;
+      background: var(--gold);
+      transform: scaleX(0); transition: transform 0.3s;
+    }
+    .ptab.active { color: var(--white); }
+    .ptab.active::after { transform: scaleX(1); }
+    .ptab:hover { color: var(--light); }
+
+    .academic-note {
+      margin-top: 2rem; text-align: center;
+      font-size: 0.6rem; font-weight: 200;
+      letter-spacing: 0.2em; color: var(--mid);
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .reveal {
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 1.5rem 1.5rem; }
+      .nav-links, .nav-cta { display: none; }
+      .hero { padding: 0 1.5rem 4rem; }
+      .hero-index { font-size: 40vw; right: 1rem; }
+      .about, .contact { grid-template-columns: 1fr; padding: 5rem 1.5rem; gap: 3rem; }
+      .services, .work, .process, .pricing { padding: 5rem 1.5rem; }
+      .services-header, .work-header { flex-direction: column; align-items: flex-start; gap: 2rem; }
+      .process-steps { grid-template-columns: 1fr 1fr; gap: 3rem; }
+      .process-steps::before { display: none; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .work-grid { grid-template-columns: 1fr; }
+      .work-item:first-child { grid-column: auto; aspect-ratio: 4/3; }
+      .service-row { grid-template-columns: 60px 1fr; }
+      .svc-tags { display: none; }
+      footer { flex-direction: column; gap: 1.5rem; padding: 2rem 1.5rem; text-align: center; }
+      .cf-row { grid-template-columns: 1fr; }
+      .cf-row .cf-group:first-child { border-right: none; padding-right: 0; }
+      .cf-row .cf-group:last-child { padding-left: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 120" width="240" height="96">
+      <text x="150" y="65" text-anchor="middle"
+        font-family="'Fraunces', serif" font-size="52" font-weight="200" fill="#f5f5f0">What<tspan font-style="italic" fill="#c9a84c"> Next</tspan></text>
+      <text x="153" y="100" text-anchor="middle"
+        font-family="'Figtree', sans-serif" font-size="13" font-weight="300" letter-spacing="7" fill="#888888">Studios</text>
+      <circle cx="150" cy="115" r="2" fill="#c9a84c"/>
+    </svg>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Start a Project</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-index">W</div>
+  <p class="hero-eyebrow">Creative Agency — whatnextstudios.com</p>
+  <h1 class="hero-title">
+    We design<br/><em>websites</em><br/>that convert.
+  </h1>
+  <div class="hero-bottom">
+    <p class="hero-desc">
+      Custom web design for brands, freelancers, and businesses who demand more than a template. Every pixel is intentional.
+    </p>
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      Scroll
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span>Brand Identity</span><span class="dot">·</span>
+    <span>Web Design</span><span class="dot">·</span>
+    <span>UI / UX</span><span class="dot">·</span>
+    <span>E-Commerce</span><span class="dot">·</span>
+    <span>Landing Pages</span><span class="dot">·</span>
+    <span>Portfolio Sites</span><span class="dot">·</span>
+    <span>Brand Identity</span><span class="dot">·</span>
+    <span>Web Design</span><span class="dot">·</span>
+    <span>UI / UX</span><span class="dot">·</span>
+    <span>E-Commerce</span><span class="dot">·</span>
+    <span>Landing Pages</span><span class="dot">·</span>
+    <span>Portfolio Sites</span><span class="dot">·</span>
+    <span>Brand Identity</span><span class="dot">·</span>
+    <span>Web Design</span><span class="dot">·</span>
+    <span>UI / UX</span><span class="dot">·</span>
+    <span>E-Commerce</span><span class="dot">·</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-left reveal">
+    <div class="about-img">
+      <div class="about-tag">Available for work</div>
+      <div class="about-img-label">Tony — Founder & Creative Director</div>
+    </div>
+  </div>
+  <div class="about-right reveal">
+    <p class="section-num">01</p>
+    <p class="section-label">About</p>
+    <h2 class="big-title">Designed to<br/><em>stand out.</em></h2>
+    <p class="about-body">
+      Hi, I'm Tony — the founder of What Next Studios. With a background spanning international business, hospitality, and software development, I bring a rare mix of commercial instinct and technical craft to every project.<br/><br/>
+      I don't just build websites. I build digital experiences that reflect your brand, speak to your audience, and drive real results.
+    </p>
+    <div class="about-stats">
+      <div>
+        <span class="astat-num">50+</span>
+        <span class="astat-label">Projects</span>
+      </div>
+      <div>
+        <span class="astat-num">15+</span>
+        <span class="astat-label">Years in Business</span>
+      </div>
+      <div>
+        <span class="astat-num">100%</span>
+        <span class="astat-label">Custom Design</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="services-header reveal">
+    <div>
+      <p class="section-num">02</p>
+      <p class="section-label">Services</p>
+      <h2 class="big-title">What I<br/><em>offer.</em></h2>
+    </div>
+    <p style="font-size:0.85rem;color:var(--mid);max-width:260px;line-height:2;font-weight:300;letter-spacing:0.01em;">Every service is tailored. No packages off the shelf — just work built around your goals.</p>
+  </div>
+  <div class="services-list reveal">
+    <div class="service-row">
+      <span class="svc-num">01</span>
+      <span class="svc-name">Brand Website</span>
+      <div class="svc-tags">
+        <span class="svc-tag">Design</span>
+        <span class="svc-tag">Dev</span>
+        <span class="svc-tag">CMS</span>
+      </div>
+      <span class="svc-arrow">→</span>
+    </div>
+    <div class="service-row">
+      <span class="svc-num">02</span>
+      <span class="svc-name">E-Commerce Store</span>
+      <div class="svc-tags">
+        <span class="svc-tag">Shopify</span>
+        <span class="svc-tag">WooCommerce</span>
+      </div>
+      <span class="svc-arrow">→</span>
+    </div>
+    <div class="service-row">
+      <span class="svc-num">03</span>
+      <span class="svc-name">Landing Page</span>
+      <div class="svc-tags">
+        <span class="svc-tag">Conversion</span>
+        <span class="svc-tag">SEO</span>
+      </div>
+      <span class="svc-arrow">→</span>
+    </div>
+    <div class="service-row">
+      <span class="svc-num">04</span>
+      <span class="svc-name">Portfolio & Personal Site</span>
+      <div class="svc-tags">
+        <span class="svc-tag">Freelancer</span>
+        <span class="svc-tag">Creative</span>
+      </div>
+      <span class="svc-arrow">→</span>
+    </div>
+    <div class="service-row">
+      <span class="svc-num">05</span>
+      <span class="svc-name">UI / UX Design</span>
+      <div class="svc-tags">
+        <span class="svc-tag">Figma</span>
+        <span class="svc-tag">Prototype</span>
+      </div>
+      <span class="svc-arrow">→</span>
+    </div>
+    <div class="service-row">
+      <span class="svc-num">06</span>
+      <span class="svc-name">Presentation Design</span>
+      <div class="svc-tags">
+        <span class="svc-tag">PowerPoint</span>
+        <span class="svc-tag">Pitch Deck</span>
+        <span class="svc-tag">Keynote</span>
+      </div>
+      <span class="svc-arrow">→</span>
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<section class="work" id="work">
+  <div class="work-header reveal">
+    <div>
+      <p class="section-num">03</p>
+      <p class="section-label">Selected Work</p>
+      <h2 class="big-title">Recent<br/><em>projects.</em></h2>
+    </div>
+    <a href="#contact" style="font-size:0.65rem;font-weight:400;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);text-decoration:none;border-bottom:1px solid var(--grey);padding-bottom:0.2rem;transition:color 0.3s,border-color 0.3s;" onmouseover="this.style.color='var(--gold)';this.style.borderColor='var(--gold)'" onmouseout="this.style.color='var(--mid)';this.style.borderColor='var(--grey)'">View All →</a>
+  </div>
+  <div class="work-grid reveal">
+    <div class="work-item">
+      <div class="work-bg wi-1"><span class="work-letter">A</span></div>
+      <div class="work-badge">E-Commerce</div>
+      <div class="work-overlay">
+        <div class="work-title">Azura Collective</div>
+        <div class="work-cat">Fashion Brand · Shopify</div>
+      </div>
+    </div>
+    <div class="work-item">
+      <div class="work-bg wi-2"><span class="work-letter">M</span></div>
+      <div class="work-badge">Branding</div>
+      <div class="work-overlay">
+        <div class="work-title">Maison Rouge</div>
+        <div class="work-cat">Restaurant · Brand Site</div>
+      </div>
+    </div>
+    <div class="work-item">
+      <div class="work-bg wi-3"><span class="work-letter">V</span></div>
+      <div class="work-badge">Portfolio</div>
+      <div class="work-overlay">
+        <div class="work-title">Vera Creative</div>
+        <div class="work-cat">Photographer · Portfolio</div>
+      </div>
+    </div>
+    <div class="work-item">
+      <div class="work-bg wi-4"><span class="work-letter">K</span></div>
+      <div class="work-badge">Landing Page</div>
+      <div class="work-overlay">
+        <div class="work-title">Kova Agency</div>
+        <div class="work-cat">Consulting · Lead Gen</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process" id="process">
+  <div class="process-header reveal">
+    <p class="section-num">04</p>
+    <p class="section-label">How It Works</p>
+    <h2 class="big-title">The<br/><em>process.</em></h2>
+  </div>
+  <div class="process-steps reveal">
+    <div class="process-step">
+      <div class="step-dot"></div>
+      <span class="step-n">01</span>
+      <div class="step-title">Discovery Call</div>
+      <p class="step-desc">We talk through your goals, audience, and vision. Free — no strings attached.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-dot"></div>
+      <span class="step-n">02</span>
+      <div class="step-title">Proposal & Quote</div>
+      <p class="step-desc">I send a detailed scope, timeline, and transparent price. No surprises.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-dot"></div>
+      <span class="step-n">03</span>
+      <div class="step-title">Design & Build</div>
+      <p class="step-desc">You review at every stage. We iterate until it's exactly right.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-dot"></div>
+      <span class="step-n">04</span>
+      <div class="step-title">Launch & Support</div>
+      <p class="step-desc">Go live with confidence. I'm available for edits and support after launch.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="pricing-header reveal">
+    <p class="section-num">05</p>
+    <p class="section-label">Pricing</p>
+    <h2 class="big-title">Simple,<br/><em>transparent.</em></h2>
+  </div>
+
+  <!-- Tab switcher -->
+  <div class="pricing-tabs reveal">
+    <button class="ptab active" onclick="switchTab('pro', this)">Professional</button>
+    <button class="ptab" onclick="switchTab('academic', this)">Academic</button>
+  </div>
+
+  <!-- PRO PRICING -->
+  <div class="pricing-grid reveal" id="tab-pro">
+    <div class="price-card">
+      <span class="pc-label">Starter</span>
+      <div class="pc-name">Essentials</div>
+      <div class="pc-price"><sup>$</sup>499</div>
+      <p class="pc-per">one-time · from</p>
+      <div class="pc-divider"></div>
+      <ul class="pc-features">
+        <li>Up to 5 pages</li>
+        <li>Mobile responsive</li>
+        <li>Contact form</li>
+        <li>Basic SEO setup</li>
+        <li>2 rounds of revisions</li>
+      </ul>
+      <button class="pc-btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Get Started</button>
+    </div>
+    <div class="price-card highlight">
+      <span class="pc-label">Most Popular</span>
+      <div class="pc-name">Studio</div>
+      <div class="pc-price"><sup>$</sup>999</div>
+      <p class="pc-per">one-time · from</p>
+      <div class="pc-divider"></div>
+      <ul class="pc-features">
+        <li>Up to 10 pages</li>
+        <li>Custom animations</li>
+        <li>CMS integration</li>
+        <li>Full SEO optimisation</li>
+        <li>Unlimited revisions</li>
+        <li>1 month free support</li>
+      </ul>
+      <button class="pc-btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Get Started</button>
+    </div>
+    <div class="price-card">
+      <span class="pc-label">Full Service</span>
+      <div class="pc-name">Premium</div>
+      <div class="pc-price">POA</div>
+      <p class="pc-per">custom quote</p>
+      <div class="pc-divider"></div>
+      <ul class="pc-features">
+        <li>E-commerce / complex builds</li>
+        <li>Custom web application</li>
+        <li>Brand identity package</li>
+        <li>Priority turnaround</li>
+        <li>Ongoing retainer option</li>
+      </ul>
+      <button class="pc-btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Let's Talk</button>
+    </div>
+    <div class="price-card">
+      <span class="pc-label">Presentation</span>
+      <div class="pc-name">Deck Design</div>
+      <div class="pc-price"><sup>$</sup>199</div>
+      <p class="pc-per">per deck · from</p>
+      <div class="pc-divider"></div>
+      <ul class="pc-features">
+        <li>PowerPoint / Keynote</li>
+        <li>Custom slide design</li>
+        <li>Pitch deck & reports</li>
+        <li>Brand-consistent layouts</li>
+        <li>Source file included</li>
+      </ul>
+      <button class="pc-btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Get Started</button>
+    </div>
+  </div>
+
+  <!-- ACADEMIC PRICING -->
+  <div class="pricing-grid reveal" id="tab-academic" style="display:none; grid-template-columns: repeat(3,1fr);">
+
+    <div class="price-card">
+      <span class="pc-label">Thesis & Research</span>
+      <div class="pc-name">Scholar</div>
+      <div class="pc-price"><sup>$</sup>79</div>
+      <p class="pc-per">per project · from</p>
+      <div class="pc-divider"></div>
+      <ul class="pc-features">
+        <li>Thesis / dissertation layout</li>
+        <li>Research poster design</li>
+        <li>Clean academic formatting</li>
+        <li>Up to 30 pages / slides</li>
+        <li>2 rounds of revisions</li>
+      </ul>
+      <button class="pc-btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Get Started</button>
+    </div>
+
+    <div class="price-card highlight">
+      <span class="pc-label">Most Popular</span>
+      <div class="pc-name">Presenter</div>
+      <div class="pc-price"><sup>$</sup>129</div>
+      <p class="pc-per">per deck · from</p>
+      <div class="pc-divider"></div>
+      <ul class="pc-features">
+        <li>Conference presentation</li>
+        <li>Seminar & class deck</li>
+        <li>Premium slide design</li>
+        <li>Data visualisation</li>
+        <li>Unlimited revisions</li>
+        <li>Source file included</li>
+      </ul>
+      <button class="pc-btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Get Started</button>
+    </div>
+
+    <div class="price-card">
+      <span class="pc-label">Full Academic Suite</span>
+      <div class="pc-name">Graduate</div>
+      <div class="pc-price"><sup>$</sup>249</div>
+      <p class="pc-per">full package · from</p>
+      <div class="pc-divider"></div>
+      <ul class="pc-features">
+        <li>Thesis layout + presentation</li>
+        <li>Research poster included</li>
+        <li>Personal portfolio page</li>
+        <li>Priority turnaround</li>
+        <li>Unlimited revisions</li>
+      </ul>
+      <button class="pc-btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Let's Talk</button>
+    </div>
+
+  </div>
+
+  <!-- Academic note -->
+  <p class="academic-note reveal" id="academic-note" style="display:none;">
+    ✦ Student ID or university email required · All academic work is 100% original design
+  </p>
+
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="contact-left reveal">
+    <p class="section-num">06</p>
+    <p class="section-label">Contact</p>
+    <h2 class="big-title">Let's build<br/>something<br/><em>great.</em></h2>
+    <p class="contact-sub">Ready to start? Have a question? Just reach out — I reply within 24 hours.</p>
+    <div class="contact-links">
+      <a class="contact-link" href="mailto:hello@whatnextstudios.com">
+        <span class="cl-label">Email</span>
+        <span class="cl-val">hello@whatnextstudios.com</span>
+        <span class="cl-arrow">→</span>
+      </a>
+      <a class="contact-link" href="#">
+        <span class="cl-label">Instagram</span>
+        <span class="cl-val">@whatnextstudios</span>
+        <span class="cl-arrow">→</span>
+      </a>
+      <a class="contact-link" href="#">
+        <span class="cl-label">LINE / WhatsApp</span>
+        <span class="cl-val">@whatnextstudios</span>
+        <span class="cl-arrow">→</span>
+      </a>
+    </div>
+  </div>
+  <div class="reveal">
+    <form class="contact-form" onsubmit="handleSubmit(event)">
+      <div class="cf-row">
+        <div class="cf-group">
+          <label class="cf-label">Your Name</label>
+          <input class="cf-input" type="text" placeholder="Full name" required/>
+        </div>
+        <div class="cf-group">
+          <label class="cf-label">Email</label>
+          <input class="cf-input" type="email" placeholder="you@email.com" required/>
+        </div>
+      </div>
+      <div class="cf-group">
+        <label class="cf-label">Service Needed</label>
+        <select class="cf-select cf-input">
+          <option value="">Select a service…</option>
+          <option>Brand Website</option>
+          <option>E-Commerce Store</option>
+          <option>Landing Page</option>
+          <option>Portfolio Site</option>
+          <option>UI / UX Design</option>
+          <option>Presentation Design (PowerPoint / Keynote)</option>
+          <option>Not sure yet</option>
+        </select>
+      </div>
+      <div class="cf-group">
+        <label class="cf-label">Budget Range</label>
+        <select class="cf-select cf-input">
+          <option value="">Select budget…</option>
+          <option>Under $500</option>
+          <option>$500 – $1,000</option>
+          <option>$1,000 – $3,000</option>
+          <option>$3,000+</option>
+        </select>
+      </div>
+      <div class="cf-group">
+        <label class="cf-label">Tell me about your project</label>
+        <textarea class="cf-textarea" placeholder="What do you need? Who is it for? Any references?"></textarea>
+      </div>
+      <button type="submit" class="cf-submit">
+        <span class="cf-submit-text">Send Message</span>
+        <span class="cf-submit-arrow">→</span>
+      </button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 120" width="90" height="36">
+      <text x="150" y="65" text-anchor="middle"
+        font-family="'Fraunces', serif" font-size="52" font-weight="200" fill="#555550">What<tspan font-style="italic" fill="#9a7d3a"> Next</tspan></text>
+      <text x="153" y="100" text-anchor="middle"
+        font-family="'Figtree', sans-serif" font-size="13" font-weight="300" letter-spacing="7" fill="#444440">Studios</text>
+      <circle cx="150" cy="115" r="2" fill="#9a7d3a"/>
+    </svg>
+  </div>
+  <div class="footer-copy">© 2025 What Next Studios — All rights reserved</div>
+  <div class="footer-links">
+    <a href="#about">About</a>
+    <a href="#work">Work</a>
+    <a href="#contact">Contact</a>
+  </div>
+</footer>
+
+<script>
+  // Tab switching
+  function switchTab(tab, el) {
+    document.querySelectorAll('.ptab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    const pro = document.getElementById('tab-pro');
+    const acad = document.getElementById('tab-academic');
+    const note = document.getElementById('academic-note');
+    if (tab === 'pro') {
+      pro.style.display = 'grid';
+      acad.style.display = 'none';
+      note.style.display = 'none';
+    } else {
+      pro.style.display = 'none';
+      acad.style.display = 'grid';
+      note.style.display = 'block';
+    }
+  }
+
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx + 'px'; cursor.style.top = my + 'px'; });
+  function animRing() { rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12; ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; requestAnimationFrame(animRing); }
+  animRing();
+  document.querySelectorAll('a, button, .service-row, .work-item').forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.style.width = '14px'; cursor.style.height = '14px'; ring.style.width = '52px'; ring.style.height = '52px'; });
+    el.addEventListener('mouseleave', () => { cursor.style.width = '8px'; cursor.style.height = '8px'; ring.style.width = '36px'; ring.style.height = '36px'; });
+  });
+
+  // Scroll reveal
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => { if (e.isIntersecting) { setTimeout(() => e.target.classList.add('visible'), i * 80); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  // Form submit
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('.cf-submit');
+    btn.querySelector('.cf-submit-text').textContent = 'Message Sent ✓';
+    btn.style.background = '#4a7a4a';
+    setTimeout(() => {
+      btn.querySelector('.cf-submit-text').textContent = 'Send Message';
+      btn.style.background = '';
+      e.target.reset();
+    }, 4000);
+  }
+</script>
+</body>
+</html>
