@@ -231,6 +231,14 @@
       border: 1px solid var(--grey);
       position: relative; overflow: hidden;
     }
+    .about-img img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+      position: absolute; inset: 0;
+      transition: transform 0.7s ease;
+      z-index: 0;
+    }
+    .about-img:hover img { transform: scale(1.04); }
     .about-img::before {
       content: 'T';
       font-family: 'Fraunces', serif;
@@ -862,6 +870,7 @@
 <section class="about" id="about">
   <div class="about-left reveal">
     <div class="about-img">
+      <img src="https://res.cloudinary.com/dte0bxhis/image/upload/v1778906458/wns/portfolio/cwhw3cr56wwlvgmrfn4f.jpg" alt="Tony — Founder & Creative Director"/>
       <div class="about-tag">Available for work</div>
       <div class="about-img-label">Tony — Founder & Creative Director</div>
     </div>
