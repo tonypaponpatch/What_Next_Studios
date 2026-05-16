@@ -93,7 +93,7 @@
       justify-content: flex-end;
       padding: 0 3.5rem 5rem;
       position: relative; overflow: hidden;
-      background-image: url('https://res.cloudinary.com/dte0bxhis/image/upload/v1778896953/wns/portfolio/o9fx5xhp50a2samnupih.png');
+      background-image: url('https://res.cloudinary.com/dte0bxhis/image/upload/v1778902650/wns/portfolio/m2yg9bmkxstlereyn5cu.png');
       background-size: cover;
       background-position: center;
     }
@@ -231,6 +231,14 @@
       border: 1px solid var(--grey);
       position: relative; overflow: hidden;
     }
+    .about-img img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+      position: absolute; inset: 0;
+      transition: transform 0.7s ease;
+      z-index: 0;
+    }
+    .about-img:hover img { transform: scale(1.04); }
     .about-img::before {
       content: 'T';
       font-family: 'Fraunces', serif;
@@ -647,25 +655,136 @@
     .reveal.visible { opacity: 1; transform: translateY(0); }
 
     /* ── RESPONSIVE ── */
+    /* ── HAMBURGER ── */
+    .ham {
+      display: none;
+      flex-direction: column; gap: 5px;
+      cursor: pointer; z-index: 200;
+      padding: 4px;
+    }
+    .ham span {
+      display: block; width: 24px; height: 1.5px;
+      background: var(--white);
+      transition: all 0.35s ease;
+      transform-origin: center;
+    }
+    .ham.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .ham.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .ham.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    /* MOBILE DRAWER */
+    .mobile-drawer {
+      position: fixed; inset: 0;
+      background: var(--black);
+      z-index: 150;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 0;
+      transform: translateX(100%);
+      transition: transform 0.45s cubic-bezier(0.77,0,0.175,1);
+    }
+    .mobile-drawer.open { transform: translateX(0); }
+    .mob-link {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2.2rem, 8vw, 3.5rem);
+      font-weight: 200; font-variation-settings: 'opsz' 72;
+      color: var(--white); text-decoration: none;
+      letter-spacing: -0.02em; line-height: 1.2;
+      padding: 0.6rem 2rem;
+      transition: color 0.3s;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: color 0.3s, opacity 0.4s, transform 0.4s;
+    }
+    .mobile-drawer.open .mob-link {
+      opacity: 1; transform: translateY(0);
+    }
+    .mobile-drawer.open .mob-link:nth-child(1) { transition-delay: 0.1s; }
+    .mobile-drawer.open .mob-link:nth-child(2) { transition-delay: 0.15s; }
+    .mobile-drawer.open .mob-link:nth-child(3) { transition-delay: 0.2s; }
+    .mobile-drawer.open .mob-link:nth-child(4) { transition-delay: 0.25s; }
+    .mobile-drawer.open .mob-link:nth-child(5) { transition-delay: 0.3s; }
+    .mob-link em { font-style: italic; color: var(--gold); }
+    .mob-link:hover { color: var(--gold); }
+    .mob-cta {
+      margin-top: 2rem;
+      font-size: 0.65rem; font-weight: 300;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--black); background: var(--gold);
+      padding: 0.9rem 2.5rem; text-decoration: none;
+      opacity: 0; transform: translateY(20px);
+      transition: background 0.3s, opacity 0.4s 0.35s, transform 0.4s 0.35s;
+    }
+    .mobile-drawer.open .mob-cta { opacity: 1; transform: translateY(0); }
+    .mob-cta:hover { background: var(--gold-lt); }
+    .mob-divider { width: 3rem; height: 1px; background: var(--grey); margin: 1.5rem 0; }
+
     @media (max-width: 900px) {
-      nav { padding: 1.5rem 1.5rem; }
+      /* NAV */
+      nav { padding: 1rem 1.5rem; }
       .nav-links, .nav-cta { display: none; }
-      .hero { padding: 0 1.5rem 4rem; }
-      .hero-index { font-size: 40vw; right: 1rem; }
-      .about, .contact { grid-template-columns: 1fr; padding: 5rem 1.5rem; gap: 3rem; }
-      .services, .work, .process, .pricing { padding: 5rem 1.5rem; }
-      .services-header, .work-header { flex-direction: column; align-items: flex-start; gap: 2rem; }
-      .process-steps { grid-template-columns: 1fr 1fr; gap: 3rem; }
-      .process-steps::before { display: none; }
-      .pricing-grid { grid-template-columns: 1fr; }
-      .work-grid { grid-template-columns: 1fr; }
-      .work-item:first-child { grid-column: auto; aspect-ratio: 4/3; }
-      .service-row { grid-template-columns: 60px 1fr; }
+      .ham { display: flex; }
+      .nav-logo svg { width: 160px; height: 64px; }
+
+      /* HERO */
+      .hero { padding: 0 1.5rem 4rem; min-height: 100svh; }
+      .hero-index { font-size: 45vw; right: 0; opacity: 0.5; }
+      .hero-title { font-size: clamp(3rem, 12vw, 5rem); }
+      .hero-bottom { flex-direction: column; gap: 2rem; }
+      .hero-scroll { display: none; }
+
+      /* MARQUEE */
+      .marquee-wrap { padding: 1rem 0; }
+
+      /* ABOUT */
+      .about { grid-template-columns: 1fr; padding: 4rem 1.5rem; gap: 3rem; }
+      .about-img { aspect-ratio: 4/3; }
+
+      /* SERVICES */
+      .services { padding: 4rem 1.5rem; }
+      .services-header { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+      .service-row { grid-template-columns: 50px 1fr; gap: 1rem; padding: 1.5rem 0; }
       .svc-tags { display: none; }
-      footer { flex-direction: column; gap: 1.5rem; padding: 2rem 1.5rem; text-align: center; }
+      .svc-price { font-size: 0.75rem; }
+
+      /* WORK */
+      .work { padding: 4rem 1.5rem; }
+      .work-header { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+      .work-grid { grid-template-columns: 1fr; gap: 1px; }
+      .work-item { aspect-ratio: 4/3 !important; }
+      .work-item:first-child { grid-column: auto; }
+
+      /* PROCESS */
+      .process { padding: 4rem 1.5rem; }
+      .process-steps { grid-template-columns: 1fr; gap: 2rem; }
+      .process-steps::before { display: none; }
+      .process-step { padding-top: 0; border-top: 1px solid var(--grey); padding-top: 1.5rem; }
+
+      /* PRICING */
+      .pricing { padding: 4rem 1.5rem; }
+      .pricing-grid { grid-template-columns: 1fr; gap: 1px; }
+
+      /* CONTACT */
+      .contact { grid-template-columns: 1fr; padding: 4rem 1.5rem; gap: 3rem; }
       .cf-row { grid-template-columns: 1fr; }
       .cf-row .cf-group:first-child { border-right: none; padding-right: 0; }
       .cf-row .cf-group:last-child { padding-left: 0; }
+      .cf-submit-row { flex-direction: column; gap: 1.5rem; align-items: flex-start; }
+
+      /* FOOTER */
+      footer { flex-direction: column; gap: 1.5rem; padding: 2rem 1.5rem; text-align: center; }
+      .footer-links { justify-content: center; }
+      .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+
+      /* GENERAL */
+      .section-label { margin-bottom: 2rem; }
+      .big-title { font-size: clamp(2.2rem, 8vw, 3.5rem); }
+    }
+
+    @media (max-width: 480px) {
+      .hero-title { font-size: clamp(2.5rem, 11vw, 3.5rem); }
+      .about, .services, .work, .process, .pricing, .contact { padding: 3rem 1.2rem; }
+      nav { padding: 0.9rem 1.2rem; }
     }
   </style>
 </head>
@@ -673,6 +792,16 @@
 
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursorRing"></div>
+
+<!-- MOBILE DRAWER -->
+<div class="mobile-drawer" id="mobileDrawer">
+  <a class="mob-link" href="#about" onclick="closeDrawer()">About</a>
+  <a class="mob-link" href="#services" onclick="closeDrawer()">Services</a>
+  <a class="mob-link" href="#work" onclick="closeDrawer()">Work</a>
+  <a class="mob-link" href="#pricing" onclick="closeDrawer()">Pricing</a>
+  <div class="mob-divider"></div>
+  <a class="mob-cta" href="#contact" onclick="closeDrawer()">Start a Project</a>
+</div>
 
 <!-- NAV -->
 <nav>
@@ -692,6 +821,9 @@
     <li><a href="#pricing">Pricing</a></li>
   </ul>
   <a href="#contact" class="nav-cta">Start a Project</a>
+  <div class="ham" id="ham" onclick="toggleDrawer()">
+    <span></span><span></span><span></span>
+  </div>
 </nav>
 
 <!-- HERO -->
@@ -738,6 +870,7 @@
 <section class="about" id="about">
   <div class="about-left reveal">
     <div class="about-img">
+      <img src="https://res.cloudinary.com/dte0bxhis/image/upload/v1778906458/wns/portfolio/cwhw3cr56wwlvgmrfn4f.jpg" alt="Tony — Founder & Creative Director"/>
       <div class="about-tag">Available for work</div>
       <div class="about-img-label">Tony — Founder & Creative Director</div>
     </div>
@@ -1197,6 +1330,19 @@
       btn.style.background = '';
       e.target.reset();
     }, 4000);
+  }
+  // Hamburger menu
+  function toggleDrawer() {
+    const drawer = document.getElementById('mobileDrawer');
+    const ham    = document.getElementById('ham');
+    drawer.classList.toggle('open');
+    ham.classList.toggle('open');
+    document.body.style.overflow = drawer.classList.contains('open') ? 'hidden' : '';
+  }
+  function closeDrawer() {
+    document.getElementById('mobileDrawer').classList.remove('open');
+    document.getElementById('ham').classList.remove('open');
+    document.body.style.overflow = '';
   }
 </script>
 </body>
