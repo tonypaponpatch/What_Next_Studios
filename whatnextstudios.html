@@ -93,6 +93,22 @@
       justify-content: flex-end;
       padding: 0 3.5rem 5rem;
       position: relative; overflow: hidden;
+      background-image: url('https://res.cloudinary.com/dte0bxhis/image/upload/v1778902650/wns/portfolio/m2yg9bmkxstlereyn5cu.png');
+      background-size: cover;
+      background-position: center;
+    }
+
+    /* Dark overlay */
+    .hero::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(
+        to top,
+        rgba(10,10,10,0.97) 0%,
+        rgba(10,10,10,0.78) 50%,
+        rgba(10,10,10,0.45) 100%
+      );
+      pointer-events: none; z-index: 0;
     }
 
     /* BG grid lines */
@@ -103,7 +119,7 @@
         linear-gradient(rgba(201,168,76,0.05) 1px, transparent 1px),
         linear-gradient(90deg, rgba(201,168,76,0.05) 1px, transparent 1px);
       background-size: 80px 80px;
-      pointer-events: none;
+      pointer-events: none; z-index: 1;
     }
 
     .hero-index {
@@ -117,6 +133,8 @@
       line-height: 1; pointer-events: none;
       user-select: none;
     }
+
+    .hero > * { position: relative; z-index: 2; }
 
     .hero-eyebrow {
       font-size: 0.6rem; font-weight: 200;
