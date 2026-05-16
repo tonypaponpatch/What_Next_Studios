@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin CMS — What Next Studios</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100;0,9..144,200;0,9..144,300;1,9..144,100;1,9..144,200;1,9..144,300&family=Figtree:wght@200;300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root{--black:#0a0a0a;--off-black:#111111;--dark:#1a1a1a;--grey:#2a2a2a;--mid:#888888;--light:#c8c8c8;--white:#f5f5f0;--gold:#c9a84c;--gold-lt:#e2c06a;--green:#4a9a5a;--red:#9a4a4a;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--black);color:var(--white);font-family:'Figtree',sans-serif;font-weight:300;letter-spacing:.01em;min-height:100vh;}
+    body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.5;}
+    ::-webkit-scrollbar{width:4px;height:4px;}::-webkit-scrollbar-track{background:var(--off-black);}::-webkit-scrollbar-thumb{background:var(--grey);}::-webkit-scrollbar-thumb:hover{background:var(--gold);}
+
+    /* LOGIN */
+    #loginScreen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:999;background:var(--black);}
+    .login-box{width:400px;border:1px solid var(--grey);background:var(--off-black);padding:3rem;position:relative;}
+    .login-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold);}
+    .login-eyebrow{font-size:.52rem;font-weight:200;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:1.8rem;display:flex;align-items:center;gap:.7rem;}
+    .login-eyebrow::before{content:'';width:1.2rem;height:1px;background:var(--gold);}
+    .login-title{font-family:'Fraunces',serif;font-size:2rem;font-weight:200;font-variation-settings:'opsz' 48;line-height:1;letter-spacing:-.02em;margin-bottom:.3rem;}
+    .login-title em{font-style:italic;color:var(--light);font-weight:100;}
+    .login-sub{font-size:.7rem;font-weight:200;color:var(--mid);letter-spacing:.06em;margin-bottom:2rem;}
+    .lf-label{display:block;font-size:.5rem;font-weight:300;letter-spacing:.26em;text-transform:uppercase;color:var(--mid);margin-bottom:.45rem;}
+    .lf-input{width:100%;background:var(--dark);border:1px solid var(--grey);color:var(--white);font-family:'Figtree',sans-serif;font-size:.88rem;font-weight:200;padding:.85rem 1rem;outline:none;transition:border-color .3s;}
+    .lf-input:focus{border-color:var(--gold);}
+    .lf-input::placeholder{color:rgba(136,136,136,.35);}
+    .lf-btn{width:100%;margin-top:1.2rem;font-family:'Figtree',sans-serif;font-size:.6rem;font-weight:300;letter-spacing:.26em;text-transform:uppercase;color:var(--black);background:var(--gold);border:none;padding:.95rem;cursor:pointer;transition:background .3s;}
+    .lf-btn:hover{background:var(--gold-lt);}
+    .lf-error{font-size:.66rem;color:#c06060;letter-spacing:.06em;margin-top:.7rem;display:none;}
+    .lf-error.show{display:block;}
+    .lf-hint{font-size:.6rem;font-weight:200;color:var(--mid);margin-top:1.3rem;letter-spacing:.05em;line-height:1.7;}
+    .lf-hint code{color:var(--gold);}
+
+    /* APP */
+    #app{display:none;min-height:100vh;position:relative;z-index:1;}
+    #app.show{display:flex;}
+
+    /* SIDEBAR */
+    .sidebar{width:210px;min-height:100vh;background:var(--off-black);border-right:1px solid var(--grey);display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto;}
+    .sb-top{padding:1.4rem 1.3rem;border-bottom:1px solid var(--grey);display:flex;align-items:center;justify-content:space-between;}
+    .sb-badge{font-size:.46rem;font-weight:300;letter-spacing:.2em;text-transform:uppercase;color:var(--black);background:var(--gold);padding:.2rem .55rem;}
+    .sb-nav{flex:1;padding:1rem 0;}
+    .sb-sec{font-size:.46rem;font-weight:300;letter-spacing:.28em;text-transform:uppercase;color:rgba(136,136,136,.45);padding:.45rem 1.3rem;margin-top:.5rem;}
+    .sb-item{display:flex;align-items:center;gap:.65rem;padding:.7rem 1.3rem;font-size:.68rem;font-weight:200;letter-spacing:.05em;color:var(--mid);cursor:pointer;transition:color .25s,background .25s;border-left:2px solid transparent;user-select:none;}
+    .sb-item:hover{color:var(--white);background:rgba(255,255,255,.03);}
+    .sb-item.active{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,.05);}
+    .sb-icon{font-size:.8rem;width:13px;text-align:center;flex-shrink:0;}
+    .sb-foot{border-top:1px solid var(--grey);padding:1rem 1.3rem;}
+    .sb-user{font-size:.6rem;font-weight:200;color:var(--mid);letter-spacing:.05em;}
+    .sb-user span{color:var(--white);}
+    .sb-out{font-size:.5rem;font-weight:200;letter-spacing:.2em;text-transform:uppercase;color:var(--mid);cursor:pointer;margin-top:.3rem;display:inline-block;transition:color .3s;}
+    .sb-out:hover{color:var(--gold);}
+
+    /* MAIN */
+    .main{flex:1;display:flex;flex-direction:column;overflow-x:hidden;min-width:0;}
+    .topbar{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.8rem;border-bottom:1px solid var(--grey);background:var(--off-black);position:sticky;top:0;z-index:50;}
+    .topbar-title{font-family:'Fraunces',serif;font-size:1.05rem;font-weight:200;font-variation-settings:'opsz' 48;letter-spacing:-.01em;}
+    .topbar-title em{font-style:italic;color:var(--gold);font-weight:100;}
+    .topbar-r{display:flex;align-items:center;gap:.5rem;}
+    .tb-btn{font-family:'Figtree',sans-serif;font-size:.52rem;font-weight:300;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;padding:.48rem 1rem;border:1px solid var(--grey);background:transparent;color:var(--mid);transition:all .3s;}
+    .tb-btn:hover{border-color:var(--gold);color:var(--gold);}
+    .tb-btn.pri{background:var(--gold);color:var(--black);border-color:var(--gold);}
+    .tb-btn.pri:hover{background:var(--gold-lt);}
+    .tb-btn:disabled{opacity:.35;cursor:not-allowed;}
+    .content{padding:1.8rem;flex:1;}
+    .panel{display:none;}
+    .panel.active{display:block;}
+
+    /* STATS */
+    .stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--grey);margin-bottom:1.4rem;}
+    .stat-card{background:var(--off-black);padding:1.4rem 1.6rem;position:relative;}
+    .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold);}
+    .stat-num{font-family:'Figtree',sans-serif;font-size:1.9rem;font-weight:100;color:var(--gold);line-height:1;letter-spacing:-.02em;margin-bottom:.25rem;}
+    .stat-lbl{font-size:.5rem;font-weight:200;letter-spacing:.2em;text-transform:uppercase;color:var(--mid);}
+
+    /* QUICK GRID */
+    .quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--grey);}
+    .qc{background:var(--off-black);padding:1.6rem;cursor:pointer;transition:background .3s;}
+    .qc:hover{background:var(--dark);}
+    .qc-icon{font-size:1.2rem;color:var(--gold);margin-bottom:.7rem;}
+    .qc-title{font-size:.78rem;font-weight:300;color:var(--white);margin-bottom:.25rem;letter-spacing:.03em;}
+    .qc-sub{font-size:.65rem;font-weight:200;color:var(--mid);letter-spacing:.04em;}
+
+    /* FORM GROUPS */
+    .fg{background:var(--dark);padding:1rem 1.2rem;position:relative;transition:background .28s;}
+    .fg:focus-within{background:#1e1e1e;}
+    .fg:focus-within::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:var(--gold);}
+    .fl{display:block;font-size:.48rem;font-weight:300;letter-spacing:.24em;text-transform:uppercase;color:var(--mid);margin-bottom:.4rem;transition:color .3s;}
+    .fg:focus-within .fl{color:var(--gold);}
+    .fi{width:100%;background:transparent;border:none;outline:none;color:var(--white);font-family:'Figtree',sans-serif;font-size:.82rem;font-weight:200;letter-spacing:.02em;}
+    .fi::placeholder{color:rgba(136,136,136,.32);}
+    select.fi{cursor:pointer;appearance:none;}
+    textarea.fi{resize:vertical;min-height:80px;line-height:1.8;}
+    .fr{display:grid;gap:1px;margin-bottom:1px;}
+    .fr.c2{grid-template-columns:1fr 1fr;}
+    .fr.c3{grid-template-columns:1fr 1fr 1fr;}
+
+    /* TABLE */
+    .tbl{background:var(--grey);display:flex;flex-direction:column;gap:1px;}
+    .th{display:grid;gap:.7rem;align-items:center;background:var(--dark);padding:.75rem 1rem;}
+    .th-cell{font-size:.48rem;font-weight:300;letter-spacing:.26em;text-transform:uppercase;color:var(--mid);}
+    .tr{display:grid;gap:.7rem;align-items:center;background:var(--off-black);padding:.75rem 1rem;transition:background .3s;}
+    .tr:hover{background:var(--dark);}
+    .tr-thumb{width:56px;height:42px;background:var(--dark);border:1px solid var(--grey);overflow:hidden;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:1rem;font-weight:100;font-style:italic;color:rgba(201,168,76,.2);flex-shrink:0;}
+    .tr-thumb img{width:100%;height:100%;object-fit:cover;}
+    .tr-name{font-size:.78rem;font-weight:300;color:var(--white);letter-spacing:.02em;}
+    .tr-sub{font-size:.6rem;font-weight:200;color:var(--mid);margin-top:.12rem;letter-spacing:.04em;}
+    .tr-tag{font-size:.5rem;font-weight:200;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);}
+    .tr-date{font-size:.6rem;font-weight:200;color:var(--mid);letter-spacing:.06em;}
+    .tr-actions{display:flex;gap:.3rem;}
+    .btn-e,.btn-d{font-size:.48rem;font-weight:300;letter-spacing:.15em;text-transform:uppercase;padding:.26rem .6rem;border:1px solid;cursor:pointer;background:transparent;transition:all .22s;}
+    .btn-e{border-color:var(--grey);color:var(--mid);}
+    .btn-e:hover{border-color:var(--gold);color:var(--gold);}
+    .btn-d{border-color:var(--grey);color:var(--mid);}
+    .btn-d:hover{border-color:var(--red);color:var(--red);}
+    .tbl-bar{display:flex;align-items:center;gap:.5rem;margin-bottom:.9rem;}
+    .tbl-search{background:var(--off-black);border:1px solid var(--grey);color:var(--white);font-family:'Figtree',sans-serif;font-size:.78rem;font-weight:200;padding:.58rem .85rem;outline:none;transition:border-color .3s;width:240px;}
+    .tbl-search:focus{border-color:var(--gold);}
+    .tbl-search::placeholder{color:rgba(136,136,136,.35);}
+    .empty-row{padding:2rem;text-align:center;background:var(--off-black);font-size:.72rem;font-weight:200;color:var(--mid);letter-spacing:.08em;}
+
+    /* BADGE */
+    .badge{display:inline-block;font-size:.46rem;font-weight:300;letter-spacing:.16em;text-transform:uppercase;padding:.18rem .55rem;border:1px solid;}
+    .b-gold{border-color:rgba(201,168,76,.4);color:var(--gold);}
+    .b-green{border-color:rgba(74,154,90,.4);color:var(--green);}
+    .b-grey{border-color:var(--grey);color:var(--mid);}
+
+    /* TOGGLE */
+    .tog-wrap{display:flex;align-items:center;gap:.7rem;padding:.8rem 1.2rem;background:var(--dark);}
+    .tog{width:34px;height:19px;background:var(--grey);border-radius:9px;cursor:pointer;position:relative;transition:background .3s;flex-shrink:0;}
+    .tog.on{background:var(--gold);}
+    .tog::after{content:'';position:absolute;top:3px;left:3px;width:13px;height:13px;border-radius:50%;background:var(--white);transition:transform .3s;}
+    .tog.on::after{transform:translateX(15px);}
+    .tog-lbl{font-size:.68rem;font-weight:200;color:var(--mid);letter-spacing:.05em;}
+
+    /* DROP ZONE */
+    .dz{border:2px dashed var(--grey);background:var(--off-black);padding:3rem;text-align:center;transition:border-color .3s,background .3s;cursor:pointer;margin-bottom:1px;position:relative;}
+    .dz:hover,.dz.drag{border-color:var(--gold);background:rgba(201,168,76,.03);}
+    .dz input[type=file]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;}
+    .dz-icon{font-family:'Fraunces',serif;font-size:2.2rem;font-weight:100;font-style:italic;font-variation-settings:'opsz' 72;color:rgba(201,168,76,.28);margin-bottom:.9rem;}
+    .dz-title{font-size:.85rem;font-weight:300;color:var(--light);margin-bottom:.35rem;letter-spacing:.03em;}
+    .dz-sub{font-size:.68rem;font-weight:200;color:var(--mid);letter-spacing:.06em;}
+    .dz-gold{color:var(--gold);}
+
+    /* UPLOAD QUEUE */
+    .uq{display:flex;flex-direction:column;gap:1px;margin-bottom:1px;}
+    .uq-item{display:grid;grid-template-columns:52px 1fr auto auto;align-items:center;gap:.9rem;background:var(--off-black);padding:.8rem 1rem;}
+    .uq-th{width:52px;height:40px;background:var(--dark);border:1px solid var(--grey);overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:.52rem;color:var(--mid);}
+    .uq-th img{width:100%;height:100%;object-fit:cover;}
+    .uq-nm{font-size:.72rem;font-weight:200;color:var(--light);letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px;}
+    .uq-sz{font-size:.58rem;font-weight:200;color:var(--mid);letter-spacing:.08em;margin-top:.12rem;}
+    .uq-st{font-size:.5rem;font-weight:300;letter-spacing:.16em;text-transform:uppercase;padding:.2rem .6rem;border:1px solid var(--grey);color:var(--mid);white-space:nowrap;}
+    .uq-st.uploading{border-color:var(--gold);color:var(--gold);}
+    .uq-st.done{border-color:var(--green);color:var(--green);}
+    .uq-st.error{border-color:var(--red);color:var(--red);}
+    .uq-del{font-size:.72rem;color:var(--mid);cursor:pointer;transition:color .3s;}
+    .uq-del:hover{color:#c06060;}
+    .prog-bar{height:2px;background:var(--grey);margin-bottom:1px;overflow:hidden;}
+    .prog-fill{height:100%;background:var(--gold);width:0%;transition:width .3s;}
+
+    /* LIBRARY */
+    .lib-bar{display:flex;align-items:center;gap:.5rem;margin-bottom:.9rem;}
+    .lib-search{background:var(--off-black);border:1px solid var(--grey);color:var(--white);font-family:'Figtree',sans-serif;font-size:.78rem;font-weight:200;padding:.58rem .85rem;outline:none;transition:border-color .3s;width:220px;}
+    .lib-search:focus{border-color:var(--gold);}
+    .lib-search::placeholder{color:rgba(136,136,136,.35);}
+    .lib-sel{background:var(--off-black);border:1px solid var(--grey);color:var(--mid);font-family:'Figtree',sans-serif;font-size:.72rem;padding:.52rem .8rem;outline:none;}
+    .lib-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--grey);}
+    .lib-item{aspect-ratio:1;background:var(--dark);overflow:hidden;position:relative;cursor:pointer;}
+    .lib-item img{width:100%;height:100%;object-fit:cover;transition:transform .4s;}
+    .lib-item:hover img{transform:scale(1.07);}
+    .lib-ov{position:absolute;inset:0;background:rgba(0,0,0,.75);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;opacity:0;transition:opacity .3s;}
+    .lib-item:hover .lib-ov{opacity:1;}
+    .la{font-size:.48rem;font-weight:300;letter-spacing:.16em;text-transform:uppercase;padding:.26rem .65rem;border:1px solid;cursor:pointer;background:transparent;transition:all .22s;}
+    .la-copy{border-color:var(--gold);color:var(--gold);}
+    .la-copy:hover{background:var(--gold);color:var(--black);}
+    .la-del{border-color:var(--red);color:var(--red);}
+    .la-del:hover{background:var(--red);color:var(--white);}
+    .lib-cap{position:absolute;bottom:0;left:0;right:0;padding:.3rem .45rem;background:rgba(0,0,0,.65);font-size:.5rem;color:var(--mid);letter-spacing:.08em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:0;transition:opacity .3s;}
+    .lib-item:hover .lib-cap{opacity:1;}
+    .lib-empty{grid-column:span 6;padding:2.5rem;text-align:center;font-size:.72rem;font-weight:200;color:var(--mid);letter-spacing:.08em;}
+
+    /* IMAGE PICKER */
+    .ip{background:var(--dark);display:flex;align-items:center;gap:.9rem;padding:.9rem 1.2rem;}
+    .ip-th{width:66px;height:50px;background:var(--grey);border:1px solid var(--grey);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.55rem;color:var(--mid);}
+    .ip-th img{width:100%;height:100%;object-fit:cover;}
+    .ip-url{font-size:.68rem;font-weight:200;color:var(--mid);letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:.35rem;}
+    .ip-choose{font-size:.5rem;font-weight:300;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,168,76,.3);background:transparent;padding:.26rem .7rem;cursor:pointer;transition:all .3s;}
+    .ip-choose:hover{background:rgba(201,168,76,.08);}
+    .mini-lib{background:var(--dark);padding:.7rem 1.2rem;display:none;border-top:1px solid var(--grey);}
+    .mini-lib.open{display:block;}
+    .mini-lbl{font-size:.48rem;font-weight:200;letter-spacing:.22em;text-transform:uppercase;color:var(--mid);margin-bottom:.55rem;}
+    .mini-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:3px;max-height:140px;overflow-y:auto;}
+    .mini-item{aspect-ratio:1;background:var(--grey);overflow:hidden;cursor:pointer;border:2px solid transparent;transition:border-color .2s;}
+    .mini-item:hover{border-color:var(--gold);}
+    .mini-item img{width:100%;height:100%;object-fit:cover;}
+    .mini-empty{font-size:.66rem;font-weight:200;color:var(--mid);letter-spacing:.06em;padding:.4rem 0;}
+
+    /* EDITOR */
+    .ed-bar{display:flex;gap:.25rem;padding:.5rem .7rem;background:var(--dark);border-bottom:1px solid var(--grey);}
+    .ed-btn{font-size:.62rem;font-weight:400;color:var(--mid);background:transparent;border:1px solid transparent;padding:.18rem .45rem;cursor:pointer;transition:all .18s;}
+    .ed-btn:hover{border-color:var(--grey);color:var(--white);}
+    .ed-area{width:100%;background:var(--dark);border:none;outline:none;color:var(--white);font-family:'Figtree',sans-serif;font-size:.82rem;font-weight:200;letter-spacing:.02em;padding:1rem 1.2rem;resize:vertical;min-height:180px;line-height:1.9;}
+    .ed-area::placeholder{color:rgba(136,136,136,.32);}
+
+    /* SETTINGS */
+    .sg{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--grey);margin-bottom:1.2rem;}
+    .sb-blk{background:var(--off-black);padding:1.8rem;}
+    .sb-lbl{font-size:.52rem;font-weight:200;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:1.1rem;}
+    .sf-save{font-family:'Figtree',sans-serif;font-size:.52rem;font-weight:300;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;padding:.6rem 1.4rem;border:none;background:var(--gold);color:var(--black);transition:background .3s;margin-top:.9rem;}
+    .sf-save:hover{background:var(--gold-lt);}
+    .sf-hint{font-size:.62rem;font-weight:200;color:var(--mid);letter-spacing:.04em;margin-top:.35rem;line-height:1.65;}
+    .sf-hint a{color:var(--gold);text-decoration:none;}
+    .sf-hint code{color:var(--gold);}
+
+    /* MODAL */
+    .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(5px);}
+    .modal-bg.show{display:flex;}
+    .modal{width:700px;max-height:92vh;background:var(--off-black);border:1px solid var(--grey);overflow-y:auto;position:relative;display:flex;flex-direction:column;}
+    .modal::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold);z-index:1;}
+    .modal-hd{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 1.7rem;border-bottom:1px solid var(--grey);position:sticky;top:0;background:var(--off-black);z-index:2;}
+    .modal-title{font-family:'Fraunces',serif;font-size:.95rem;font-weight:200;font-variation-settings:'opsz' 48;letter-spacing:-.01em;}
+    .modal-title em{font-style:italic;color:var(--gold);font-weight:100;}
+    .modal-x{font-size:1rem;color:var(--mid);cursor:pointer;transition:color .3s;background:none;border:none;}
+    .modal-x:hover{color:var(--white);}
+    .modal-body{padding:1.6rem;flex:1;}
+    .modal-ft{display:flex;justify-content:flex-end;gap:.45rem;padding:1.1rem 1.7rem;border-top:1px solid var(--grey);position:sticky;bottom:0;background:var(--off-black);}
+    .m-cancel,.m-save{font-family:'Figtree',sans-serif;font-size:.52rem;font-weight:300;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;padding:.6rem 1.4rem;transition:all .3s;}
+    .m-cancel{border:1px solid var(--grey);background:transparent;color:var(--mid);}
+    .m-cancel:hover{border-color:var(--gold);color:var(--gold);}
+    .m-save{border:none;background:var(--gold);color:var(--black);}
+    .m-save:hover{background:var(--gold-lt);}
+
+    /* STATUS DOT */
+    .sdot{display:inline-flex;align-items:center;gap:.45rem;font-size:.62rem;font-weight:200;color:var(--mid);letter-spacing:.06em;}
+    .dot{width:6px;height:6px;border-radius:50%;background:var(--grey);flex-shrink:0;}
+    .dot.green{background:#5aaa6a;box-shadow:0 0 6px rgba(90,170,106,.5);}
+
+    /* TOAST */
+    .toast-wrap{position:fixed;bottom:1.4rem;right:1.4rem;z-index:9999;display:flex;flex-direction:column;gap:.35rem;}
+    .toast{display:flex;align-items:center;gap:.65rem;background:var(--dark);border:1px solid var(--grey);border-left:3px solid var(--gold);padding:.75rem 1.1rem;min-width:220px;font-size:.68rem;font-weight:200;letter-spacing:.05em;animation:sIn .3s ease;}
+    .toast.success{border-left-color:#5aaa6a;}
+    .toast.error{border-left-color:#aa5a5a;}
+    @keyframes sIn{from{opacity:0;transform:translateX(14px);}to{opacity:1;transform:translateX(0);}}
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-eyebrow">What Next Studios</div>
+    <h1 class="login-title">Studio<br/><em>Control.</em></h1>
+    <p class="login-sub">Full CMS · Authorised access only</p>
+    <label class="lf-label">Password</label>
+    <input class="lf-input" type="password" id="lp" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()"/>
+    <button class="lf-btn" onclick="doLogin()">Enter Studio →</button>
+    <p class="lf-error" id="lErr">Incorrect password.</p>
+    <p class="lf-hint">Default password: <code>admin2025</code><br/>Change it under Account settings.</p>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-top">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 120" width="70" height="28">
+        <text x="150" y="65" text-anchor="middle" font-family="'Fraunces',serif" font-size="52" font-weight="200" fill="#f5f5f0">What<tspan font-style="italic" fill="#c9a84c"> Next</tspan></text>
+        <text x="153" y="100" text-anchor="middle" font-family="'Figtree',sans-serif" font-size="13" font-weight="300" letter-spacing="7" fill="#555550">Studios</text>
+        <circle cx="150" cy="115" r="2" fill="#c9a84c"/>
+      </svg>
+      <span class="sb-badge">CMS</span>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-sec">Overview</div>
+      <div class="sb-item active" data-panel="dash" onclick="nav(this)"><span class="sb-icon">◈</span>Dashboard</div>
+      <div class="sb-sec">Content</div>
+      <div class="sb-item" data-panel="projects" onclick="nav(this)"><span class="sb-icon">▦</span>Portfolio</div>
+      <div class="sb-item" data-panel="blog" onclick="nav(this)"><span class="sb-icon">✎</span>Blog / Insights</div>
+      <div class="sb-item" data-panel="services" onclick="nav(this)"><span class="sb-icon">◇</span>Services</div>
+      <div class="sb-item" data-panel="testimonials" onclick="nav(this)"><span class="sb-icon">❝</span>Testimonials</div>
+      <div class="sb-sec">Media</div>
+      <div class="sb-item" data-panel="upload" onclick="nav(this)"><span class="sb-icon">↑</span>Upload Images</div>
+      <div class="sb-item" data-panel="library" onclick="nav(this)"><span class="sb-icon">⊞</span>Media Library</div>
+      <div class="sb-sec">Site</div>
+      <div class="sb-item" data-panel="contact" onclick="nav(this)"><span class="sb-icon">@</span>Contact Info</div>
+      <div class="sb-item" data-panel="siteset" onclick="nav(this)"><span class="sb-icon">◉</span>Site Settings</div>
+      <div class="sb-item" data-panel="account" onclick="nav(this)"><span class="sb-icon">⚙</span>Account</div>
+    </nav>
+    <div class="sb-foot">
+      <div class="sb-user">Logged in as <span>Tony</span></div>
+      <div class="sb-out" onclick="doLogout()">→ Log out</div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="ttl">Dashboard <em>Overview</em></div>
+      <div class="topbar-r">
+        <span class="sdot"><span class="dot green"></span>Cloudinary · dte0bxhis</span>
+        <button class="tb-btn pri" onclick="nav(document.querySelector('[data-panel=upload]'))">↑ Upload</button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <div class="panel active" id="panel-dash">
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-num" id="s0">0</div><div class="stat-lbl">Projects</div></div>
+          <div class="stat-card"><div class="stat-num" id="s1">0</div><div class="stat-lbl">Blog Posts</div></div>
+          <div class="stat-card"><div class="stat-num" id="s2">0</div><div class="stat-lbl">Images</div></div>
+          <div class="stat-card"><div class="stat-num" id="s3">0</div><div class="stat-lbl">Services</div></div>
+          <div class="stat-card"><div class="stat-num" id="s4">0</div><div class="stat-lbl">Testimonials</div></div>
+        </div>
+        <div class="quick-grid">
+          <div class="qc" onclick="nav(qs('[data-panel=upload]'))"><div class="qc-icon">↑</div><div class="qc-title">Upload Images</div><div class="qc-sub">Add to Cloudinary library</div></div>
+          <div class="qc" onclick="openProjModal()"><div class="qc-icon">+</div><div class="qc-title">New Project</div><div class="qc-sub">Add portfolio work</div></div>
+          <div class="qc" onclick="openPostModal()"><div class="qc-icon">✎</div><div class="qc-title">New Blog Post</div><div class="qc-sub">Write an insight article</div></div>
+          <div class="qc" onclick="nav(qs('[data-panel=contact]'))"><div class="qc-icon">@</div><div class="qc-title">Contact Info</div><div class="qc-sub">Update email & social links</div></div>
+          <div class="qc" onclick="nav(qs('[data-panel=siteset]'))"><div class="qc-icon">◉</div><div class="qc-title">Site Settings</div><div class="qc-sub">Meta, tagline, analytics</div></div>
+          <div class="qc" onclick="exportAll()"><div class="qc-icon">↓</div><div class="qc-title">Export Backup</div><div class="qc-sub">Download full JSON backup</div></div>
+        </div>
+      </div>
+
+      <!-- PORTFOLIO -->
+      <div class="panel" id="panel-projects">
+        <div class="tbl-bar">
+          <input class="tbl-search" placeholder="Search projects…" oninput="rProjects(this.value)"/>
+          <button class="tb-btn pri" onclick="openProjModal()">+ Add Project</button>
+          <button class="tb-btn" onclick="exportJSON('projects')">↓ JSON</button>
+        </div>
+        <div class="tbl">
+          <div class="th" style="grid-template-columns:60px 1fr 110px 65px 55px 90px;">
+            <div class="th-cell">Image</div><div class="th-cell">Project</div><div class="th-cell">Category</div><div class="th-cell">Year</div><div class="th-cell">Order</div><div class="th-cell">Actions</div>
+          </div>
+          <div id="projRows"></div>
+        </div>
+      </div>
+
+      <!-- BLOG -->
+      <div class="panel" id="panel-blog">
+        <div class="tbl-bar">
+          <input class="tbl-search" placeholder="Search posts…" oninput="rPosts(this.value)"/>
+          <button class="tb-btn pri" onclick="openPostModal()">+ New Post</button>
+          <button class="tb-btn" onclick="exportJSON('posts')">↓ JSON</button>
+        </div>
+        <div class="tbl">
+          <div class="th" style="grid-template-columns:60px 1fr 100px 80px 65px 90px;">
+            <div class="th-cell">Cover</div><div class="th-cell">Title</div><div class="th-cell">Category</div><div class="th-cell">Date</div><div class="th-cell">Status</div><div class="th-cell">Actions</div>
+          </div>
+          <div id="postRows"></div>
+        </div>
+      </div>
+
+      <!-- SERVICES -->
+      <div class="panel" id="panel-services">
+        <div class="tbl-bar">
+          <button class="tb-btn pri" onclick="openSvcModal()">+ Add Service</button>
+          <button class="tb-btn" onclick="toast('Services saved!','success')">✓ Save Order</button>
+        </div>
+        <div class="tbl">
+          <div class="th" style="grid-template-columns:32px 1fr 100px 90px 70px 90px;">
+            <div class="th-cell">#</div><div class="th-cell">Service</div><div class="th-cell">Category</div><div class="th-cell">Price From</div><div class="th-cell">Visible</div><div class="th-cell">Actions</div>
+          </div>
+          <div id="svcRows"></div>
+        </div>
+      </div>
+
+      <!-- TESTIMONIALS -->
+      <div class="panel" id="panel-testimonials">
+        <div class="tbl-bar">
+          <button class="tb-btn pri" onclick="openTestModal()">+ Add Testimonial</button>
+        </div>
+        <div class="tbl">
+          <div class="th" style="grid-template-columns:1fr 130px 70px 90px;">
+            <div class="th-cell">Quote</div><div class="th-cell">Author</div><div class="th-cell">Featured</div><div class="th-cell">Actions</div>
+          </div>
+          <div id="testRows"></div>
+        </div>
+      </div>
+
+      <!-- UPLOAD -->
+      <div class="panel" id="panel-upload">
+        <div class="dz" id="dz">
+          <input type="file" id="fi" multiple accept="image/*" onchange="handleFiles(this.files)"/>
+          <div class="dz-icon">↑</div>
+          <div class="dz-title">Drop images here or <span class="dz-gold">browse</span></div>
+          <div class="dz-sub">JPG · PNG · WebP · SVG · GIF · Max 10MB each</div>
+        </div>
+        <div class="fr c2" style="margin-bottom:1px;">
+          <div class="fg"><label class="fl">Folder tag</label>
+            <select class="fi" id="upFolder"><option value="portfolio">portfolio</option><option value="about">about</option><option value="blog">blog</option><option value="misc">misc</option></select>
+          </div>
+          <div class="fg"><label class="fl">Alt text (optional)</label><input class="fi" type="text" id="upAlt" placeholder="Description for all files…"/></div>
+        </div>
+        <div class="uq" id="uq"></div>
+        <div class="prog-bar"><div class="prog-fill" id="pf"></div></div>
+        <button class="tb-btn pri" id="upBtn" onclick="uploadAll()" disabled style="margin-bottom:1.8rem;">Upload to Cloudinary →</button>
+      </div>
+
+      <!-- LIBRARY -->
+      <div class="panel" id="panel-library">
+        <div class="lib-bar">
+          <input class="lib-search" placeholder="Search images…" oninput="rLib(this.value,document.getElementById('libSel').value)"/>
+          <select class="lib-sel" id="libSel" onchange="rLib(document.querySelector('.lib-search').value,this.value)">
+            <option value="">All folders</option><option value="portfolio">portfolio</option><option value="about">about</option><option value="blog">blog</option><option value="misc">misc</option>
+          </select>
+          <span style="font-size:.58rem;font-weight:200;color:var(--mid);letter-spacing:.1em;margin-left:auto;" id="libCnt">0 images</span>
+        </div>
+        <div class="lib-grid" id="libGrid"><div class="lib-empty">No images yet.</div></div>
+      </div>
+
+      <!-- CONTACT -->
+      <div class="panel" id="panel-contact">
+        <div style="max-width:660px;">
+          <div class="fr c2">
+            <div class="fg"><label class="fl">Email</label><input class="fi" type="email" id="ci-email" placeholder="hello@whatnextstudios.com"/></div>
+            <div class="fg"><label class="fl">Phone / WhatsApp</label><input class="fi" type="text" id="ci-phone" placeholder="+1 000 000 0000"/></div>
+          </div>
+          <div class="fr c2" style="margin-top:1px;">
+            <div class="fg"><label class="fl">Instagram</label><input class="fi" type="text" id="ci-ig" placeholder="@whatnextstudios"/></div>
+            <div class="fg"><label class="fl">LINE ID</label><input class="fi" type="text" id="ci-line" placeholder="@whatnextstudios"/></div>
+          </div>
+          <div class="fr c2" style="margin-top:1px;">
+            <div class="fg"><label class="fl">LinkedIn URL</label><input class="fi" type="text" id="ci-li" placeholder="https://linkedin.com/in/…"/></div>
+            <div class="fg"><label class="fl">Location</label><input class="fi" type="text" id="ci-loc" placeholder="Fort Wayne, Indiana · USA"/></div>
+          </div>
+          <div class="fg" style="margin-top:1px;"><label class="fl">Reply Promise</label><input class="fi" type="text" id="ci-promise" placeholder="Reply within 24 hours, every time."/></div>
+          <button class="sf-save" style="margin-top:1.2rem;" onclick="saveContact()">Save Contact Info</button>
+        </div>
+      </div>
+
+      <!-- SITE SETTINGS -->
+      <div class="panel" id="panel-siteset">
+        <div class="sg">
+          <div class="sb-blk">
+            <div class="sb-lbl">Identity</div>
+            <div class="fg"><label class="fl">Studio Name</label><input class="fi" id="ss-name" placeholder="What Next Studios"/></div>
+            <div class="fg" style="margin-top:1px;"><label class="fl">Tagline</label><input class="fi" id="ss-tag" placeholder="Design with intention."/></div>
+            <div class="fg" style="margin-top:1px;"><label class="fl">Footer Copyright</label><input class="fi" id="ss-copy" placeholder="© 2025 What Next Studios"/></div>
+            <button class="sf-save" onclick="saveSite()">Save</button>
+          </div>
+          <div class="sb-blk">
+            <div class="sb-lbl">SEO Meta</div>
+            <div class="fg"><label class="fl">Meta Title</label><input class="fi" id="ss-mt" placeholder="What Next Studios — Creative Agency"/></div>
+            <div class="fg" style="margin-top:1px;"><label class="fl">Meta Description</label><textarea class="fi" id="ss-md" style="min-height:60px;" placeholder="Boutique design & development studio…"></textarea></div>
+            <div class="fg" style="margin-top:1px;"><label class="fl">Google Analytics ID</label><input class="fi" id="ss-ga" placeholder="G-XXXXXXXXXX"/></div>
+            <button class="sf-save" onclick="saveSite()">Save</button>
+          </div>
+          <div class="sb-blk">
+            <div class="sb-lbl">Cloudinary</div>
+            <div class="fg"><label class="fl">Cloud Name</label><input class="fi" value="dte0bxhis" readonly style="color:var(--gold);"/></div>
+            <div class="fg" style="margin-top:1px;"><label class="fl">Upload Preset</label><input class="fi" id="ss-preset" placeholder="wns_uploads"/></div>
+            <div style="margin-top:.9rem;"><span class="sdot"><span class="dot green"></span>Cloud name configured</span></div>
+            <button class="sf-save" style="margin-top:.9rem;" onclick="savePreset()">Save</button>
+          </div>
+          <div class="sb-blk">
+            <div class="sb-lbl">Data</div>
+            <p class="sf-hint" style="margin-bottom:1rem;">Download a full JSON backup of all CMS content.</p>
+            <button class="sf-save" onclick="exportAll()">↓ Export Full Backup</button>
+            <div style="margin-top:1.5rem;">
+              <p class="sf-hint" style="margin-bottom:.7rem;">Import a previously exported backup.</p>
+              <input type="file" accept=".json" onchange="importBackup(this)" style="font-size:.68rem;color:var(--mid);"/>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACCOUNT -->
+      <div class="panel" id="panel-account">
+        <div style="max-width:380px;border:1px solid var(--grey);background:var(--off-black);padding:2rem;position:relative;">
+          <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold);"></div>
+          <div style="font-family:'Fraunces',serif;font-size:1rem;font-weight:200;font-variation-settings:'opsz' 48;margin-bottom:1.5rem;">Change <em style="font-style:italic;color:var(--gold);font-weight:100;">Password</em></div>
+          <div class="fg"><label class="fl">Current Password</label><input class="fi" type="password" id="ac0" placeholder="Current password"/></div>
+          <div class="fg" style="margin-top:1px;"><label class="fl">New Password</label><input class="fi" type="password" id="ac1" placeholder="New password"/></div>
+          <div class="fg" style="margin-top:1px;"><label class="fl">Confirm</label><input class="fi" type="password" id="ac2" placeholder="Confirm new password"/></div>
+          <button class="sf-save" style="margin-top:1.1rem;" onclick="changePwd()">Update Password</button>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </main>
+</div>
+
+<!-- PROJECT MODAL -->
+<div class="modal-bg" id="mProj">
+  <div class="modal">
+    <div class="modal-hd"><div class="modal-title" id="mProjT">New <em>Project</em></div><button class="modal-x" onclick="closeM('mProj')">✕</button></div>
+    <div class="modal-body">
+      <div class="fr c2"><div class="fg"><label class="fl">Title *</label><input class="fi" id="p-title" placeholder="Aurum Collective"/></div><div class="fg"><label class="fl">Client</label><input class="fi" id="p-client" placeholder="Optional"/></div></div>
+      <div class="fr c3" style="margin-top:1px;">
+        <div class="fg"><label class="fl">Category</label><select class="fi" id="p-cat"><option value="web">Web Design</option><option value="brand">Branding</option><option value="ui">UI / UX</option><option value="print">Print</option></select></div>
+        <div class="fg"><label class="fl">Year</label><input class="fi" id="p-year" placeholder="2025"/></div>
+        <div class="fg"><label class="fl">Order</label><input class="fi" type="number" id="p-order" placeholder="1"/></div>
+      </div>
+      <div class="fg" style="margin-top:1px;"><label class="fl">Short Description</label><textarea class="fi" id="p-desc" style="min-height:65px;" placeholder="One or two sentences…"></textarea></div>
+      <div class="fg" style="margin-top:1px;"><label class="fl">Case Study Body (Markdown)</label>
+        <div class="ed-bar">
+          <button class="ed-btn" onclick="edFmt('p-body','bold')"><b>B</b></button>
+          <button class="ed-btn" onclick="edFmt('p-body','italic')"><i>I</i></button>
+          <button class="ed-btn" onclick="edLine('p-body','## ')">H2</button>
+          <button class="ed-btn" onclick="edLine('p-body','### ')">H3</button>
+          <button class="ed-btn" onclick="edLine('p-body','- ')">List</button>
+        </div>
+        <textarea class="ed-area" id="p-body" placeholder="Full case study content…"></textarea>
+      </div>
+      <div style="margin-top:1px;">
+        <div style="font-size:.48rem;font-weight:300;letter-spacing:.24em;text-transform:uppercase;color:var(--mid);padding:.5rem 1.2rem;background:var(--dark);">Cover Image</div>
+        <div class="ip">
+          <div class="ip-th" id="p-th">No img</div>
+          <div style="flex:1;min-width:0;"><div class="ip-url" id="p-iurl">No image selected</div><button class="ip-choose" onclick="toggleMini('p-ml','p-th','p-iurl','p-img')">Choose from Library</button></div>
+          <input type="hidden" id="p-img"/>
+        </div>
+        <div class="mini-lib" id="p-ml"><div class="mini-lbl">Click to select</div><div class="mini-grid" id="p-ml-g"><div class="mini-empty">Upload images first.</div></div></div>
+      </div>
+      <div class="fr c2" style="margin-top:1px;">
+        <div class="fg"><label class="fl">Case Study URL</label><input class="fi" id="p-curl" placeholder="case-study.html"/></div>
+        <div class="fg"><label class="fl">Live Site URL</label><input class="fi" id="p-live" placeholder="https://…"/></div>
+      </div>
+      <div class="tog-wrap" style="margin-top:1px;"><div class="tog" id="p-feat" onclick="this.classList.toggle('on')"></div><span class="tog-lbl">Featured project (pinned first on homepage)</span></div>
+    </div>
+    <div class="modal-ft"><button class="m-cancel" onclick="closeM('mProj')">Cancel</button><button class="m-save" onclick="saveProj()">Save Project</button></div>
+  </div>
+</div>
+
+<!-- POST MODAL -->
+<div class="modal-bg" id="mPost">
+  <div class="modal">
+    <div class="modal-hd"><div class="modal-title" id="mPostT">New <em>Post</em></div><button class="modal-x" onclick="closeM('mPost')">✕</button></div>
+    <div class="modal-body">
+      <div class="fg"><label class="fl">Title *</label><input class="fi" id="b-title" placeholder="Why most small business websites fail their owners"/></div>
+      <div class="fr c3" style="margin-top:1px;">
+        <div class="fg"><label class="fl">Category</label><select class="fi" id="b-cat"><option>Design Strategy</option><option>Typography</option><option>Branding</option><option>Freelance</option><option>Code & Design</option><option>Global Business</option><option>Strategy</option></select></div>
+        <div class="fg"><label class="fl">Read Time</label><input class="fi" id="b-read" placeholder="5 min read"/></div>
+        <div class="fg"><label class="fl">Publish Date</label><input class="fi" type="date" id="b-date"/></div>
+      </div>
+      <div class="fg" style="margin-top:1px;"><label class="fl">Excerpt</label><textarea class="fi" id="b-excerpt" style="min-height:58px;" placeholder="Hook sentence for the blog list…"></textarea></div>
+      <div class="fg" style="margin-top:1px;"><label class="fl">Full Article (Markdown)</label>
+        <div class="ed-bar">
+          <button class="ed-btn" onclick="edFmt('b-body','bold')"><b>B</b></button>
+          <button class="ed-btn" onclick="edFmt('b-body','italic')"><i>I</i></button>
+          <button class="ed-btn" onclick="edLine('b-body','## ')">H2</button>
+          <button class="ed-btn" onclick="edLine('b-body','- ')">List</button>
+        </div>
+        <textarea class="ed-area" id="b-body" placeholder="Full article content…"></textarea>
+      </div>
+      <div style="margin-top:1px;">
+        <div style="font-size:.48rem;font-weight:300;letter-spacing:.24em;text-transform:uppercase;color:var(--mid);padding:.5rem 1.2rem;background:var(--dark);">Cover Image</div>
+        <div class="ip">
+          <div class="ip-th" id="b-th">No img</div>
+          <div style="flex:1;min-width:0;"><div class="ip-url" id="b-iurl">No image selected</div><button class="ip-choose" onclick="toggleMini('b-ml','b-th','b-iurl','b-img')">Choose from Library</button></div>
+          <input type="hidden" id="b-img"/>
+        </div>
+        <div class="mini-lib" id="b-ml"><div class="mini-lbl">Click to select</div><div class="mini-grid" id="b-ml-g"><div class="mini-empty">Upload images first.</div></div></div>
+      </div>
+      <div class="tog-wrap" style="margin-top:1px;"><div class="tog" id="b-pub" onclick="this.classList.toggle('on')"></div><span class="tog-lbl">Published — visible on site</span></div>
+    </div>
+    <div class="modal-ft"><button class="m-cancel" onclick="closeM('mPost')">Cancel</button><button class="m-save" onclick="savePost()">Save Post</button></div>
+  </div>
+</div>
+
+<!-- SERVICE MODAL -->
+<div class="modal-bg" id="mSvc">
+  <div class="modal" style="width:560px;">
+    <div class="modal-hd"><div class="modal-title" id="mSvcT">New <em>Service</em></div><button class="modal-x" onclick="closeM('mSvc')">✕</button></div>
+    <div class="modal-body">
+      <div class="fr c2"><div class="fg"><label class="fl">Service Name *</label><input class="fi" id="sv-name" placeholder="Web Design & Development"/></div><div class="fg"><label class="fl">Category</label><select class="fi" id="sv-cat"><option>Web Design</option><option>Branding</option><option>UI / UX</option><option>Presentation</option><option>Other</option></select></div></div>
+      <div class="fr c2" style="margin-top:1px;"><div class="fg"><label class="fl">Price From ($)</label><input class="fi" type="number" id="sv-price" placeholder="499"/></div><div class="fg"><label class="fl">Price Label</label><input class="fi" id="sv-plbl" placeholder="per project · from"/></div></div>
+      <div class="fg" style="margin-top:1px;"><label class="fl">Description</label><textarea class="fi" id="sv-desc" style="min-height:65px;" placeholder="What this service includes…"></textarea></div>
+      <div class="fg" style="margin-top:1px;"><label class="fl">Features (one per line)</label><textarea class="fi" id="sv-feats" style="min-height:90px;" placeholder="Brand websites & landing pages&#10;E-commerce stores&#10;Mobile-first, performance-optimised"></textarea></div>
+      <div class="tog-wrap" style="margin-top:1px;"><div class="tog on" id="sv-vis" onclick="this.classList.toggle('on')"></div><span class="tog-lbl">Visible on services page</span></div>
+    </div>
+    <div class="modal-ft"><button class="m-cancel" onclick="closeM('mSvc')">Cancel</button><button class="m-save" onclick="saveSvc()">Save Service</button></div>
+  </div>
+</div>
+
+<!-- TESTIMONIAL MODAL -->
+<div class="modal-bg" id="mTest">
+  <div class="modal" style="width:500px;">
+    <div class="modal-hd"><div class="modal-title" id="mTestT">New <em>Testimonial</em></div><button class="modal-x" onclick="closeM('mTest')">✕</button></div>
+    <div class="modal-body">
+      <div class="fg"><label class="fl">Quote *</label><textarea class="fi" id="t-quote" style="min-height:80px;" placeholder="Working with What Next Studios was…"></textarea></div>
+      <div class="fr c2" style="margin-top:1px;"><div class="fg"><label class="fl">Author Name</label><input class="fi" id="t-author" placeholder="Natasha Aurelius"/></div><div class="fg"><label class="fl">Role / Company</label><input class="fi" id="t-role" placeholder="Founder, Aurum Collective"/></div></div>
+      <div class="tog-wrap" style="margin-top:1px;"><div class="tog" id="t-feat" onclick="this.classList.toggle('on')"></div><span class="tog-lbl">Feature on homepage</span></div>
+    </div>
+    <div class="modal-ft"><button class="m-cancel" onclick="closeM('mTest')">Cancel</button><button class="m-save" onclick="saveTest()">Save</button></div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="tw"></div>
+
+<script>
+/* ─── CONFIG ─── */
+const CLOUD = 'dte0bxhis';
+const UP_URL = `https://api.cloudinary.com/v1_1/${CLOUD}/image/upload`;
+
+/* ─── STATE ─── */
+const K = {
+  pass:'wns_pass', projects:'wns_projects', posts:'wns_posts',
+  services:'wns_services', testimonials:'wns_testimonials',
+  images:'wns_images', contact:'wns_contact', site:'wns_site', preset:'wns_preset'
+};
+let D = { projects:[], posts:[], services:[], testimonials:[], images:[] };
+let editId = {};
+let uQueue = [];
+
+/* ─── HELPERS ─── */
+const qs = s => document.querySelector(s);
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,5);
+const today = () => new Date().toISOString().split('T')[0];
+const gv = id => { const e = document.getElementById(id); return e ? e.value : ''; };
+const sv = (id, v) => { const e = document.getElementById(id); if (e) e.value = v; };
+const tog = id => document.getElementById(id);
+const persist = k => localStorage.setItem(K[k], JSON.stringify(D[k]));
+const load = k => { try { const v = localStorage.getItem(K[k]); if (v) D[k] = JSON.parse(v); } catch(e){} };
+const catMap = { web:'Web Design', brand:'Branding', ui:'UI / UX', print:'Print' };
+const catLbl = c => catMap[c] || c;
+
+/* ─── LOGIN ─── */
+const getPass = () => localStorage.getItem(K.pass) || 'admin2025';
+function doLogin() {
+  if (document.getElementById('lp').value === getPass()) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').classList.add('show');
+    init();
+  } else {
+    const e = document.getElementById('lErr');
+    e.classList.add('show');
+    setTimeout(() => e.classList.remove('show'), 2500);
+  }
+}
+function doLogout() {
+  document.getElementById('app').classList.remove('show');
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('lp').value = '';
+}
+
+/* ─── INIT ─── */
+function init() {
+  ['projects','posts','services','testimonials','images'].forEach(load);
+  if (!D.services.length) D.services = defaultSvcs();
+  loadSettings();
+  rAll(); stats();
+}
+
+/* ─── NAV ─── */
+const TITLES = { dash:'Dashboard <em>Overview</em>', projects:'Portfolio <em>Projects</em>', blog:'Blog <em>Insights</em>', services:'<em>Services</em>', testimonials:'<em>Testimonials</em>', upload:'Upload <em>Images</em>', library:'Media <em>Library</em>', contact:'Contact <em>Info</em>', siteset:'Site <em>Settings</em>', account:'<em>Account</em>' };
+function nav(el) {
+  const id = el.dataset.panel;
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('ttl').innerHTML = TITLES[id] || id;
+  if (id === 'dash')    stats();
+  if (id === 'library') rLib();
+}
+
+/* ─── UPLOAD ─── */
+function handleFiles(files) {
+  [...files].forEach(f => {
+    if (f.size > 10*1024*1024) { toast(`${f.name} over 10MB`,'error'); return; }
+    uQueue.push({ file:f, status:'queued', url:'', localUrl:'' });
+  });
+  rQueue(); document.getElementById('upBtn').disabled = !uQueue.length;
+}
+function rQueue() {
+  const el = document.getElementById('uq');
+  el.innerHTML = uQueue.map((item,i) => `
+    <div class="uq-item" id="uqi${i}">
+      <div class="uq-th" id="uqt${i}">${item.localUrl?`<img src="${item.localUrl}"/>`:'IMG'}</div>
+      <div><div class="uq-nm">${item.file.name}</div><div class="uq-sz">${(item.file.size/1024).toFixed(0)} KB</div></div>
+      <div class="uq-st ${item.status}" id="uqs${i}">${item.status}</div>
+      <span class="uq-del" onclick="rmQ(${i})">✕</span>
+    </div>`).join('');
+  uQueue.forEach((item,i) => {
+    if (item.localUrl) return;
+    const r = new FileReader();
+    r.onload = e => { item.localUrl = e.target.result; const t = document.getElementById('uqt'+i); if(t) t.innerHTML=`<img src="${e.target.result}"/>`; };
+    r.readAsDataURL(item.file);
+  });
+}
+function rmQ(i) { uQueue.splice(i,1); rQueue(); document.getElementById('upBtn').disabled = !uQueue.length; }
+async function uploadAll() {
+  const preset = localStorage.getItem(K.preset) || 'wns_uploads';
+  const folder = gv('upFolder');
+  const btn = document.getElementById('upBtn');
+  btn.disabled = true; btn.textContent = 'Uploading…';
+  const pf = document.getElementById('pf');
+  let done = 0;
+  for (let i = 0; i < uQueue.length; i++) {
+    const item = uQueue[i];
+    if (item.status === 'done') { done++; continue; }
+    setQS(i,'uploading');
+    try {
+      const fd = new FormData();
+      fd.append('file', item.file);
+      fd.append('upload_preset', preset);
+      fd.append('folder', `wns/${folder}`);
+      const res = await fetch(UP_URL, { method:'POST', body:fd });
+      const data = await res.json();
+      if (data.secure_url) {
+        item.status = 'done'; item.url = data.secure_url;
+        setQS(i,'done');
+        D.images.push({ id:uid(), name:item.file.name, url:data.secure_url, public_id:data.public_id||'', folder, size:item.file.size, date:today() });
+        persist('images');
+      } else { setQS(i,'error'); toast(`Failed: ${item.file.name} — ${data.error?.message||'check preset'}`, 'error'); }
+    } catch(e) { setQS(i,'error'); toast('Network error','error'); }
+    done++;
+    pf.style.width = Math.round(done/uQueue.length*100)+'%';
+  }
+  btn.textContent = 'Upload to Cloudinary →';
+  uQueue = uQueue.filter(x => x.status !== 'done');
+  rQueue(); btn.disabled = !uQueue.length;
+  stats(); rLib();
+  toast('Upload complete!','success');
+  setTimeout(() => pf.style.width='0%', 1500);
+}
+function setQS(i,s) { uQueue[i].status=s; const e=document.getElementById('uqs'+i); if(e){e.className='uq-st '+s;e.textContent=s;} }
+
+// Drag & Drop
+const dze = document.getElementById('dz');
+dze.addEventListener('dragover', e => { e.preventDefault(); dze.classList.add('drag'); });
+dze.addEventListener('dragleave', () => dze.classList.remove('drag'));
+dze.addEventListener('drop', e => { e.preventDefault(); dze.classList.remove('drag'); handleFiles(e.dataTransfer.files); });
+
+/* ─── LIBRARY ─── */
+function rLib(search='', folder='') {
+  const grid = document.getElementById('libGrid');
+  const cnt  = document.getElementById('libCnt');
+  let imgs = [...D.images].reverse();
+  if (search) imgs = imgs.filter(i => i.name.toLowerCase().includes(search.toLowerCase()));
+  if (folder) imgs = imgs.filter(i => i.folder === folder);
+  cnt.textContent = imgs.length + ' image' + (imgs.length!==1?'s':'');
+  if (!imgs.length) { grid.innerHTML = '<div class="lib-empty">No images found.</div>'; return; }
+  grid.innerHTML = imgs.map(img => `
+    <div class="lib-item">
+      <img src="${img.url}" alt="${img.name}" loading="lazy"/>
+      <div class="lib-ov">
+        <button class="la la-copy" onclick="copyURL('${img.url}',event)">Copy URL</button>
+        <button class="la la-del" onclick="delImg('${img.id}',event)">Delete</button>
+      </div>
+      <div class="lib-cap">${img.name}</div>
+    </div>`).join('');
+}
+function copyURL(url,e) { if(e) e.stopPropagation(); navigator.clipboard.writeText(url).then(()=>toast('URL copied!','success')); }
+function delImg(id,e) { if(e) e.stopPropagation(); if(!confirm('Remove from library?')) return; D.images=D.images.filter(i=>i.id!==id); persist('images'); rLib(); stats(); toast('Removed','success'); }
+
+/* ─── IMG PICKER ─── */
+function toggleMini(mlId, thId, urlId, valId) {
+  const ml = document.getElementById(mlId);
+  ml.classList.toggle('open');
+  const grid = document.getElementById(mlId+'-g');
+  if (!grid) return;
+  if (!D.images.length) { grid.innerHTML='<div class="mini-empty">Upload images first.</div>'; return; }
+  grid.innerHTML = [...D.images].reverse().map(img =>
+    `<div class="mini-item" onclick="pickImg('${img.url}','${thId}','${urlId}','${valId}','${mlId}')"><img src="${img.url}" loading="lazy"/></div>`
+  ).join('');
+}
+function pickImg(url,thId,urlId,valId,mlId) {
+  document.getElementById(thId).innerHTML = `<img src="${url}"/>`;
+  document.getElementById(urlId).textContent = url;
+  document.getElementById(valId).value = url;
+  document.getElementById(mlId).classList.remove('open');
+}
+
+/* ─── PROJECTS ─── */
+function rProjects(search='') {
+  const el = document.getElementById('projRows');
+  const items = D.projects.filter(p => !search || p.title.toLowerCase().includes(search.toLowerCase())).sort((a,b)=>a.order-b.order);
+  if (!items.length) { el.innerHTML=`<div class="empty-row">No projects yet. Click "+ Add Project" to get started.</div>`; return; }
+  el.innerHTML = items.map(p=>`
+    <div class="tr" style="grid-template-columns:60px 1fr 110px 65px 55px 90px;">
+      <div class="tr-thumb">${p.img?`<img src="${p.img}"/>`:(p.title[0]||'?')}</div>
+      <div><div class="tr-name">${p.title}</div>${p.client?`<div class="tr-sub">${p.client}</div>`:''}</div>
+      <div class="tr-tag">${catLbl(p.cat)}</div>
+      <div class="tr-date">${p.year||'—'}</div>
+      <div class="tr-date">${p.order}</div>
+      <div class="tr-actions"><button class="btn-e" onclick="openProjModal('${p.id}')">Edit</button><button class="btn-d" onclick="delItem('projects','${p.id}',rProjects)">Del</button></div>
+    </div>`).join('');
+}
+function openProjModal(id) {
+  editId.proj = id||null;
+  const p = id ? D.projects.find(x=>x.id===id) : null;
+  document.getElementById('mProjT').innerHTML = p ? 'Edit <em>Project</em>' : 'New <em>Project</em>';
+  sv('p-title',p?.title||''); sv('p-client',p?.client||''); sv('p-cat',p?.cat||'web');
+  sv('p-year',p?.year||new Date().getFullYear()); sv('p-order',p?.order||(D.projects.length+1));
+  sv('p-desc',p?.desc||''); sv('p-body',p?.body||''); sv('p-curl',p?.caseUrl||'case-study.html');
+  sv('p-live',p?.liveUrl||''); sv('p-img',p?.img||'');
+  setThumb('p-th','p-iurl',p?.img||'');
+  tog('p-feat').className='tog'+(p?.featured?' on':'');
+  openM('mProj');
+}
+function saveProj() {
+  const title=gv('p-title').trim(); if(!title){toast('Title required','error');return;}
+  const proj = { id:editId.proj||uid(), title, client:gv('p-client').trim(), cat:gv('p-cat'), year:gv('p-year'), order:parseInt(gv('p-order'))||1, desc:gv('p-desc').trim(), body:gv('p-body').trim(), caseUrl:gv('p-curl').trim(), liveUrl:gv('p-live').trim(), img:gv('p-img'), featured:tog('p-feat').classList.contains('on') };
+  upsert('projects',proj,editId.proj); persist('projects'); rProjects(); stats(); closeM('mProj');
+  toast(editId.proj?'Project updated':'Project added!','success');
+}
+
+/* ─── POSTS ─── */
+function rPosts(search='') {
+  const el = document.getElementById('postRows');
+  const items = D.posts.filter(p=>!search||p.title.toLowerCase().includes(search.toLowerCase())).sort((a,b)=>new Date(b.date)-new Date(a.date));
+  if (!items.length) { el.innerHTML=`<div class="empty-row">No posts yet. Click "+ New Post".</div>`; return; }
+  el.innerHTML = items.map(p=>`
+    <div class="tr" style="grid-template-columns:60px 1fr 100px 80px 65px 90px;">
+      <div class="tr-thumb">${p.img?`<img src="${p.img}"/>`:'✎'}</div>
+      <div><div class="tr-name">${p.title}</div><div class="tr-sub">${(p.excerpt||'').slice(0,50)}…</div></div>
+      <div class="tr-tag" style="font-size:.48rem;">${p.cat||'—'}</div>
+      <div class="tr-date">${p.date||'—'}</div>
+      <div>${p.published?'<span class="badge b-green">Live</span>':'<span class="badge b-grey">Draft</span>'}</div>
+      <div class="tr-actions"><button class="btn-e" onclick="openPostModal('${p.id}')">Edit</button><button class="btn-d" onclick="delItem('posts','${p.id}',rPosts)">Del</button></div>
+    </div>`).join('');
+}
+function openPostModal(id) {
+  editId.post = id||null;
+  const p = id ? D.posts.find(x=>x.id===id) : null;
+  document.getElementById('mPostT').innerHTML = p ? 'Edit <em>Post</em>' : 'New <em>Post</em>';
+  sv('b-title',p?.title||''); sv('b-cat',p?.cat||'Design Strategy'); sv('b-read',p?.readTime||'5 min read');
+  sv('b-date',p?.date||today()); sv('b-excerpt',p?.excerpt||''); sv('b-body',p?.body||''); sv('b-img',p?.img||'');
+  setThumb('b-th','b-iurl',p?.img||'');
+  tog('b-pub').className='tog'+(p?.published?' on':'');
+  openM('mPost');
+}
+function savePost() {
+  const title=gv('b-title').trim(); if(!title){toast('Title required','error');return;}
+  const post = { id:editId.post||uid(), title, cat:gv('b-cat'), readTime:gv('b-read'), date:gv('b-date'), excerpt:gv('b-excerpt').trim(), body:gv('b-body').trim(), img:gv('b-img'), published:tog('b-pub').classList.contains('on') };
+  upsert('posts',post,editId.post); persist('posts'); rPosts(); stats(); closeM('mPost');
+  toast(editId.post?'Post updated':'Post saved!','success');
+}
+
+/* ─── SERVICES ─── */
+function rServices() {
+  const el = document.getElementById('svcRows');
+  if (!D.services.length) { el.innerHTML='<div class="empty-row">No services yet.</div>'; return; }
+  el.innerHTML = D.services.map((s,i)=>`
+    <div class="tr" style="grid-template-columns:32px 1fr 100px 90px 70px 90px;">
+      <div class="tr-date">${i+1}</div>
+      <div><div class="tr-name">${s.name}</div><div class="tr-sub">${(s.desc||'').slice(0,50)}…</div></div>
+      <div class="tr-tag" style="font-size:.48rem;">${s.cat||'—'}</div>
+      <div class="tr-date">$${s.price||'—'}</div>
+      <div>${s.visible!==false?'<span class="badge b-green">On</span>':'<span class="badge b-grey">Off</span>'}</div>
+      <div class="tr-actions"><button class="btn-e" onclick="openSvcModal('${s.id}')">Edit</button><button class="btn-d" onclick="delItem('services','${s.id}',rServices)">Del</button></div>
+    </div>`).join('');
+}
+function openSvcModal(id) {
+  editId.svc = id||null;
+  const s = id ? D.services.find(x=>x.id===id) : null;
+  document.getElementById('mSvcT').innerHTML = s ? 'Edit <em>Service</em>' : 'New <em>Service</em>';
+  sv('sv-name',s?.name||''); sv('sv-cat',s?.cat||'Web Design'); sv('sv-price',s?.price||'');
+  sv('sv-plbl',s?.priceLabel||'per project · from'); sv('sv-desc',s?.desc||'');
+  sv('sv-feats',(s?.features||[]).join('\n'));
+  tog('sv-vis').className='tog'+(s?.visible!==false?' on':'');
+  openM('mSvc');
+}
+function saveSvc() {
+  const name=gv('sv-name').trim(); if(!name){toast('Name required','error');return;}
+  const svc = { id:editId.svc||uid(), name, cat:gv('sv-cat'), price:gv('sv-price'), priceLabel:gv('sv-plbl'), desc:gv('sv-desc').trim(), features:gv('sv-feats').split('\n').filter(Boolean), visible:tog('sv-vis').classList.contains('on') };
+  upsert('services',svc,editId.svc); persist('services'); rServices(); stats(); closeM('mSvc');
+  toast('Service saved!','success');
+}
+
+/* ─── TESTIMONIALS ─── */
+function rTestimonials() {
+  const el = document.getElementById('testRows');
+  if (!D.testimonials.length) { el.innerHTML='<div class="empty-row">No testimonials yet.</div>'; return; }
+  el.innerHTML = D.testimonials.map(t=>`
+    <div class="tr" style="grid-template-columns:1fr 130px 70px 90px;">
+      <div class="tr-name" style="font-style:italic;font-size:.75rem;">"${(t.quote||'').slice(0,80)}…"</div>
+      <div><div class="tr-name" style="font-size:.72rem;">${t.author||'—'}</div><div class="tr-sub">${t.role||''}</div></div>
+      <div>${t.featured?'<span class="badge b-gold">★</span>':'<span class="badge b-grey">—</span>'}</div>
+      <div class="tr-actions"><button class="btn-e" onclick="openTestModal('${t.id}')">Edit</button><button class="btn-d" onclick="delItem('testimonials','${t.id}',rTestimonials)">Del</button></div>
+    </div>`).join('');
+}
+function openTestModal(id) {
+  editId.test = id||null;
+  const t = id ? D.testimonials.find(x=>x.id===id) : null;
+  document.getElementById('mTestT').innerHTML = t ? 'Edit <em>Testimonial</em>' : 'New <em>Testimonial</em>';
+  sv('t-quote',t?.quote||''); sv('t-author',t?.author||''); sv('t-role',t?.role||'');
+  tog('t-feat').className='tog'+(t?.featured?' on':'');
+  openM('mTest');
+}
+function saveTest() {
+  const quote=gv('t-quote').trim(); if(!quote){toast('Quote required','error');return;}
+  const t = { id:editId.test||uid(), quote, author:gv('t-author').trim(), role:gv('t-role').trim(), featured:tog('t-feat').classList.contains('on') };
+  upsert('testimonials',t,editId.test); persist('testimonials'); rTestimonials(); stats(); closeM('mTest');
+  toast('Testimonial saved!','success');
+}
+
+/* ─── CONTACT & SITE SETTINGS ─── */
+function loadSettings() {
+  try {
+    const ci = JSON.parse(localStorage.getItem(K.contact)||'{}');
+    sv('ci-email',ci.email||''); sv('ci-phone',ci.phone||''); sv('ci-ig',ci.ig||'');
+    sv('ci-line',ci.line||''); sv('ci-li',ci.linkedin||''); sv('ci-loc',ci.location||''); sv('ci-promise',ci.promise||'');
+    const ss = JSON.parse(localStorage.getItem(K.site)||'{}');
+    sv('ss-name',ss.name||''); sv('ss-tag',ss.tagline||''); sv('ss-copy',ss.copy||'');
+    sv('ss-mt',ss.metaTitle||''); sv('ss-md',ss.metaDesc||''); sv('ss-ga',ss.ga||'');
+    sv('ss-preset', localStorage.getItem(K.preset)||'wns_uploads');
+  } catch(e){}
+}
+function saveContact() {
+  localStorage.setItem(K.contact, JSON.stringify({ email:gv('ci-email'), phone:gv('ci-phone'), ig:gv('ci-ig'), line:gv('ci-line'), linkedin:gv('ci-li'), location:gv('ci-loc'), promise:gv('ci-promise') }));
+  toast('Contact info saved!','success');
+}
+function saveSite() {
+  localStorage.setItem(K.site, JSON.stringify({ name:gv('ss-name'), tagline:gv('ss-tag'), copy:gv('ss-copy'), metaTitle:gv('ss-mt'), metaDesc:gv('ss-md'), ga:gv('ss-ga') }));
+  toast('Settings saved!','success');
+}
+function savePreset() { localStorage.setItem(K.preset, gv('ss-preset')||'wns_uploads'); toast('Preset saved!','success'); }
+
+/* ─── PASSWORD ─── */
+function changePwd() {
+  const cur=gv('ac0'), nw=gv('ac1'), cf=gv('ac2');
+  if(cur!==getPass()){toast('Current password incorrect','error');return;}
+  if(!nw){toast('New password cannot be empty','error');return;}
+  if(nw!==cf){toast('Passwords do not match','error');return;}
+  localStorage.setItem(K.pass,nw);
+  ['ac0','ac1','ac2'].forEach(id=>sv(id,''));
+  toast('Password updated!','success');
+}
+
+/* ─── EXPORT / IMPORT ─── */
+function exportAll() {
+  const blob = new Blob([JSON.stringify({...D, exported:today()},null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`wns-backup-${today()}.json`; a.click();
+  toast('Backup exported!','success');
+}
+function exportJSON(key) {
+  const blob=new Blob([JSON.stringify(D[key],null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`wns-${key}.json`; a.click();
+  toast(`Exported ${key}.json`,'success');
+}
+function importBackup(input) {
+  const f=input.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=e=>{
+    try {
+      const data=JSON.parse(e.target.result);
+      ['projects','posts','services','testimonials','images'].forEach(k=>{ if(data[k]){ D[k]=data[k]; persist(k); } });
+      rAll(); stats(); loadSettings(); toast('Backup imported!','success');
+    } catch{ toast('Invalid backup file','error'); }
+  };
+  r.readAsText(f);
+}
+
+/* ─── EDITOR ─── */
+function edFmt(id,cmd) { const ta=document.getElementById(id); const s=ta.selectionStart,e=ta.selectionEnd; const sel=ta.value.substring(s,e); if(!sel) return; const w=cmd==='bold'?'**':'*'; ta.value=ta.value.slice(0,s)+w+sel+w+ta.value.slice(e); }
+function edLine(id,prefix) { const ta=document.getElementById(id); const pos=ta.selectionStart; const st=ta.value.lastIndexOf('\n',pos-1)+1; ta.value=ta.value.slice(0,st)+prefix+ta.value.slice(st); }
+
+/* ─── UTILS ─── */
+function upsert(key,item,eid) { if(eid){ const i=D[key].findIndex(x=>x.id===eid); if(i>=0) D[key][i]=item; else D[key].push(item); } else D[key].push(item); }
+function delItem(key,id,cb) { if(!confirm('Delete this item?')) return; D[key]=D[key].filter(x=>x.id!==id); persist(key); cb(); stats(); toast('Deleted','success'); }
+function setThumb(thId,urlId,url) { const t=document.getElementById(thId); const u=document.getElementById(urlId); if(!t||!u) return; t.innerHTML=url?`<img src="${url}"/>`:'No img'; u.textContent=url||'No image selected'; }
+function openM(id) { document.getElementById(id).classList.add('show'); }
+function closeM(id) { document.getElementById(id).classList.remove('show'); document.querySelectorAll('.mini-lib').forEach(el=>el.classList.remove('open')); }
+function rAll() { rProjects(); rPosts(); rServices(); rTestimonials(); }
+function stats() { [D.projects.length,D.posts.length,D.images.length,D.services.length,D.testimonials.length].forEach((v,i)=>{ const e=document.getElementById('s'+i); if(e) e.textContent=v; }); }
+function toast(msg,type='') { const wrap=document.getElementById('tw'); const el=document.createElement('div'); el.className=`toast ${type}`; el.innerHTML=`<span>${type==='success'?'✓':type==='error'?'✕':'·'}</span> ${msg}`; wrap.appendChild(el); setTimeout(()=>el.remove(),3500); }
+function defaultSvcs() {
+  return [
+    {id:uid(),name:'Web Design & Development',cat:'Web Design',price:'499',priceLabel:'per project · from',desc:'Custom websites designed from scratch — no templates, no page builders.',features:['Brand websites & landing pages','E-commerce stores','Mobile-first','SEO-ready markup'],visible:true},
+    {id:uid(),name:'Brand Identity',cat:'Branding',price:'299',priceLabel:'per project · from',desc:'Complete visual identities that communicate who you are.',features:['Logo design & logo systems','Typography & colour palette','Brand guidelines','Social media kit'],visible:true},
+    {id:uid(),name:'UI / UX Design',cat:'UI / UX',price:'599',priceLabel:'per project · from',desc:'User research, wireframes, and polished Figma prototypes.',features:['User research','Wireframes','Figma prototypes','Developer-ready handoff'],visible:true},
+    {id:uid(),name:'Presentation Design',cat:'Presentation',price:'129',priceLabel:'per deck · from',desc:'Pitch decks, investor presentations, and academic slides.',features:['Pitch deck design','PowerPoint or Keynote','Data visualisation','Source file included'],visible:true},
+  ];
+}
+</script>
+</body>
+</html>

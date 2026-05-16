@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Services — What Next Studios</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100;0,9..144,200;0,9..144,300;1,9..144,100;1,9..144,200;1,9..144,300&family=Figtree:wght@200;300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root{--black:#0a0a0a;--off-black:#111111;--dark:#1a1a1a;--grey:#2a2a2a;--mid:#888888;--light:#c8c8c8;--white:#f5f5f0;--gold:#c9a84c;--gold-lt:#e2c06a;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--black);color:var(--white);font-family:'Figtree',sans-serif;font-weight:300;letter-spacing:.01em;overflow-x:clip;cursor:none;}
+    .cursor{position:fixed;width:8px;height:8px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .3s,height .3s;}
+    .cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(201,168,76,.4);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .12s ease;}
+    body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:1;opacity:.5;}
+    nav{position:fixed;top:0;width:100%;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:.8rem 3.5rem;}
+    .nav-logo{display:flex;align-items:center;line-height:1;text-decoration:none;}
+    .nav-links{display:flex;gap:2.5rem;list-style:none;}
+    .nav-links a{font-size:.65rem;font-weight:300;letter-spacing:.28em;text-transform:uppercase;color:var(--mid);text-decoration:none;transition:color .4s;}
+    .nav-links a:hover,.nav-links a.active{color:var(--gold);}
+    .nav-cta{font-size:.65rem;font-weight:300;letter-spacing:.24em;text-transform:uppercase;color:var(--black);background:var(--gold);padding:.6rem 1.4rem;text-decoration:none;transition:background .3s;}
+    .nav-cta:hover{background:var(--gold-lt);}
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity .9s ease,transform .9s ease;}
+    .reveal.visible{opacity:1;transform:translateY(0);}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+    .section-num{font-family:'Figtree',sans-serif;font-size:.6rem;font-weight:200;letter-spacing:.35em;color:var(--gold);margin-bottom:.5rem;}
+    .section-label{font-size:.58rem;font-weight:200;letter-spacing:.35em;text-transform:uppercase;color:var(--mid);margin-bottom:3rem;display:flex;align-items:center;gap:1rem;}
+    .section-label::after{content:'';flex:1;max-width:3rem;height:1px;background:var(--grey);}
+    .big-title{font-family:'Fraunces',serif;font-size:clamp(2.8rem,5.5vw,5rem);font-weight:200;line-height:.97;letter-spacing:-.025em;font-variation-settings:'opsz' 72;}
+    .big-title em{font-style:italic;color:var(--light);font-weight:100;font-variation-settings:'opsz' 72;}
+
+    /* HERO */
+    .hero{min-height:70vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 3.5rem 5rem;position:relative;overflow:hidden;border-bottom:1px solid var(--grey);}
+    .hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(201,168,76,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,.04) 1px,transparent 1px);background-size:80px 80px;pointer-events:none;}
+    .hero-bg{position:absolute;top:50%;right:0;transform:translateY(-50%);font-family:'Fraunces',serif;font-size:30vw;font-weight:100;font-style:italic;font-variation-settings:'opsz' 144;color:transparent;-webkit-text-stroke:1px rgba(201,168,76,.06);line-height:1;pointer-events:none;user-select:none;}
+    .h-eyebrow{font-size:.6rem;font-weight:200;letter-spacing:.38em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem;opacity:0;animation:fadeUp 1s .3s forwards;}
+    .h-eyebrow::before{content:'';width:2.5rem;height:1px;background:var(--gold);}
+    .h-title{font-family:'Fraunces',serif;font-size:clamp(3.5rem,8vw,8rem);font-weight:200;line-height:.92;letter-spacing:-.03em;font-variation-settings:'opsz' 144;opacity:0;animation:fadeUp 1s .5s forwards;}
+    .h-title em{font-style:italic;color:var(--light);font-weight:100;}
+    .h-sub{font-size:.85rem;font-weight:200;line-height:2;color:var(--mid);max-width:360px;letter-spacing:.02em;margin-top:2rem;opacity:0;animation:fadeUp 1s .7s forwards;}
+
+    /* SERVICE DETAIL */
+    .service-detail{border-top:1px solid var(--grey);position:relative;z-index:2;}
+    .svc-block{display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid var(--grey);}
+    .svc-block.alt{direction:rtl;}
+    .svc-block.alt > *{direction:ltr;}
+    .svc-visual{background:var(--off-black);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+    .svc-visual-inner{width:100%;height:100%;min-height:480px;display:flex;align-items:center;justify-content:center;transition:transform .7s ease;}
+    .svc-block:hover .svc-visual-inner{transform:scale(1.03);}
+    .sv-1{background:linear-gradient(135deg,#0f1a2e,#1a2d5a);}
+    .sv-2{background:linear-gradient(135deg,#1a1408,#3d300f);}
+    .sv-3{background:linear-gradient(135deg,#150a20,#321a48);}
+    .sv-4{background:linear-gradient(135deg,#0a1a1a,#143d3d);}
+    .sv-letter{font-family:'Fraunces',serif;font-size:14rem;font-weight:100;font-style:italic;font-variation-settings:'opsz' 144;color:rgba(255,255,255,.04);user-select:none;}
+    .svc-content{padding:5rem 4rem;display:flex;flex-direction:column;justify-content:center;}
+    .svc-index{font-size:.58rem;font-weight:200;letter-spacing:.35em;color:var(--gold);font-family:'Figtree',sans-serif;margin-bottom:1.5rem;}
+    .svc-name{font-family:'Fraunces',serif;font-size:clamp(2rem,3.5vw,3rem);font-weight:200;line-height:1;letter-spacing:-.02em;font-variation-settings:'opsz' 72;margin-bottom:2rem;}
+    .svc-name em{font-style:italic;color:var(--light);font-weight:100;}
+    .svc-desc{font-size:.88rem;font-weight:200;line-height:2.2;color:var(--mid);letter-spacing:.02em;margin-bottom:2.5rem;}
+    .svc-items{list-style:none;display:flex;flex-direction:column;gap:.7rem;margin-bottom:2.5rem;}
+    .svc-items li{font-size:.8rem;font-weight:200;color:var(--light);letter-spacing:.02em;display:flex;align-items:center;gap:.75rem;}
+    .svc-items li::before{content:'✦';color:var(--gold);font-size:.5rem;flex-shrink:0;}
+    .svc-link{display:inline-flex;align-items:center;gap:.7rem;font-size:.6rem;font-weight:300;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);text-decoration:none;transition:gap .3s;border-bottom:1px solid rgba(201,168,76,.3);padding-bottom:.3rem;}
+    .svc-link:hover{gap:1.2rem;}
+    .svc-starting{font-size:.7rem;font-weight:200;letter-spacing:.15em;color:var(--mid);margin-top:1.5rem;}
+    .svc-starting strong{color:var(--gold);font-weight:300;}
+
+    /* ADD-ONS */
+    .addons{padding:8rem 3.5rem;border-top:1px solid var(--grey);background:var(--off-black);}
+    .addons-header{margin-bottom:5rem;}
+    .addons-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--grey);}
+    .addon-card{background:var(--off-black);padding:2.5rem 2rem;transition:background .4s;position:relative;overflow:hidden;}
+    .addon-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:transparent;transition:background .4s;}
+    .addon-card:hover{background:var(--dark);}
+    .addon-card:hover::before{background:var(--gold);}
+    .ac-icon{font-family:'Fraunces',serif;font-size:2rem;font-weight:100;font-style:italic;font-variation-settings:'opsz' 48;color:rgba(201,168,76,.2);margin-bottom:1.5rem;line-height:1;}
+    .ac-title{font-size:.82rem;font-weight:300;letter-spacing:.1em;text-transform:uppercase;color:var(--white);margin-bottom:.8rem;}
+    .ac-body{font-size:.75rem;font-weight:200;line-height:2;color:var(--mid);letter-spacing:.02em;}
+
+    /* PROCESS STRIP */
+    .process-strip{padding:6rem 3.5rem;border-top:1px solid var(--grey);}
+    .ps-header{margin-bottom:4rem;}
+    .ps-steps{display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative;}
+    .ps-steps::before{content:'';position:absolute;top:1.6rem;left:0;right:0;height:1px;background:var(--grey);}
+    .ps-step{padding-right:2rem;}
+    .ps-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);margin-bottom:1.8rem;position:relative;z-index:1;box-shadow:0 0 0 4px var(--black),0 0 0 5px var(--gold);}
+    .ps-n{font-size:.55rem;font-weight:200;letter-spacing:.3em;color:var(--mid);display:block;margin-bottom:.6rem;}
+    .ps-title{font-size:.82rem;font-weight:300;color:var(--white);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem;}
+    .ps-desc{font-size:.75rem;font-weight:200;line-height:1.9;color:var(--mid);}
+
+    /* FAQ */
+    .faq{padding:8rem 3.5rem;border-top:1px solid var(--grey);}
+    .faq-header{margin-bottom:5rem;}
+    .faq-list{display:flex;flex-direction:column;max-width:800px;}
+    .faq-item{border-bottom:1px solid var(--grey);cursor:none;}
+    .faq-item:first-child{border-top:1px solid var(--grey);}
+    .faq-q{padding:1.8rem 0;display:flex;justify-content:space-between;align-items:center;font-size:.9rem;font-weight:300;color:var(--white);letter-spacing:.02em;}
+    .faq-icon{font-size:1.2rem;color:var(--gold);transition:transform .3s;flex-shrink:0;margin-left:2rem;}
+    .faq-item.open .faq-icon{transform:rotate(45deg);}
+    .faq-a{max-height:0;overflow:hidden;transition:max-height .5s ease,padding .5s ease;}
+    .faq-item.open .faq-a{max-height:300px;padding-bottom:1.8rem;}
+    .faq-a p{font-size:.82rem;font-weight:200;line-height:2.1;color:var(--mid);letter-spacing:.02em;}
+
+    /* CTA */
+    .svc-cta{padding:8rem 3.5rem;border-top:1px solid var(--grey);text-align:center;background:var(--off-black);position:relative;overflow:hidden;}
+    .svc-cta::before{content:'S';font-family:'Fraunces',serif;font-size:40vw;font-weight:100;font-style:italic;font-variation-settings:'opsz' 144;color:transparent;-webkit-text-stroke:1px rgba(201,168,76,.04);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;user-select:none;}
+    .svc-cta-inner{position:relative;z-index:1;}
+    .svc-cta h2{font-family:'Fraunces',serif;font-size:clamp(3rem,7vw,7rem);font-weight:200;line-height:.95;letter-spacing:-.03em;font-variation-settings:'opsz' 144;margin-bottom:2.5rem;}
+    .svc-cta h2 em{font-style:italic;color:var(--light);font-weight:100;}
+    .svc-cta p{font-size:.88rem;font-weight:200;line-height:2;color:var(--mid);max-width:420px;margin:0 auto 3rem;letter-spacing:.02em;}
+    .cta-btn{display:inline-block;font-size:.62rem;font-weight:300;letter-spacing:.28em;text-transform:uppercase;color:var(--black);background:var(--gold);padding:1.1rem 2.8rem;text-decoration:none;transition:background .3s;}
+    .cta-btn:hover{background:var(--gold-lt);}
+
+    footer{border-top:1px solid var(--grey);padding:3rem 3.5rem;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2;}
+    .footer-copy{font-size:.6rem;font-weight:200;letter-spacing:.2em;color:var(--mid);}
+    .footer-links{display:flex;gap:2rem;}
+    .footer-links a{font-size:.6rem;font-weight:200;letter-spacing:.2em;text-transform:uppercase;color:var(--mid);text-decoration:none;transition:color .3s;}
+    .footer-links a:hover{color:var(--gold);}
+  </style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 120" width="90" height="36">
+      <text x="150" y="65" text-anchor="middle" font-family="'Fraunces', serif" font-size="52" font-weight="200" fill="#f5f5f0">What<tspan font-style="italic" fill="#c9a84c"> Next</tspan></text>
+      <text x="153" y="100" text-anchor="middle" font-family="'Figtree', sans-serif" font-size="13" font-weight="300" letter-spacing="7" fill="#888888">Studios</text>
+      <circle cx="150" cy="115" r="2" fill="#c9a84c"/>
+    </svg>
+  </a>
+  <ul class="nav-links">
+    <li><a href="about.html">About</a></li>
+    <li><a href="work.html">Work</a></li>
+    <li><a href="services.html" class="active">Services</a></li>
+    <li><a href="blog.html">Insights</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+  <a class="nav-cta" href="index.html#contact">Start a Project</a>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-bg">S</div>
+  <p class="h-eyebrow">What We Do</p>
+  <h1 class="h-title">Services<br/><em>built to</em><br/>perform.</h1>
+  <p class="h-sub">From brand identity to full-stack web experiences — every service is designed to move your business forward.</p>
+</header>
+
+<!-- SERVICE BLOCKS -->
+<section class="service-detail">
+
+  <!-- 01 Web Design -->
+  <div class="svc-block reveal">
+    <div class="svc-visual">
+      <div class="svc-visual-inner sv-1">
+        <span class="sv-letter">W</span>
+      </div>
+    </div>
+    <div class="svc-content">
+      <span class="svc-index">01 — Web Design & Development</span>
+      <h2 class="svc-name">Websites that<br/><em>convert.</em></h2>
+      <p class="svc-desc">Custom websites designed from scratch — no templates, no page builders. Every pixel is crafted with your brand and conversion goals in mind.</p>
+      <ul class="svc-items">
+        <li>Brand websites & landing pages</li>
+        <li>E-commerce stores (Shopify / custom)</li>
+        <li>Portfolio & creative agency sites</li>
+        <li>Mobile-first, performance-optimised</li>
+        <li>CMS integration (or static delivery)</li>
+        <li>SEO-ready markup & meta strategy</li>
+      </ul>
+      <a class="svc-link" href="index.html#contact">Start a conversation →</a>
+      <p class="svc-starting">Starting from <strong>$499</strong></p>
+    </div>
+  </div>
+
+  <!-- 02 Branding -->
+  <div class="svc-block alt reveal">
+    <div class="svc-visual">
+      <div class="svc-visual-inner sv-2">
+        <span class="sv-letter">B</span>
+      </div>
+    </div>
+    <div class="svc-content">
+      <span class="svc-index">02 — Brand Identity</span>
+      <h2 class="svc-name">Identity that<br/><em>endures.</em></h2>
+      <p class="svc-desc">A brand is more than a logo. We build complete visual identities that communicate who you are at every touchpoint — from business cards to billboards.</p>
+      <ul class="svc-items">
+        <li>Logo design & logo systems</li>
+        <li>Typography & colour palette</li>
+        <li>Brand guidelines document</li>
+        <li>Business card & stationery</li>
+        <li>Social media kit</li>
+        <li>Packaging design</li>
+      </ul>
+      <a class="svc-link" href="index.html#contact">Start a conversation →</a>
+      <p class="svc-starting">Starting from <strong>$299</strong></p>
+    </div>
+  </div>
+
+  <!-- 03 UI/UX -->
+  <div class="svc-block reveal">
+    <div class="svc-visual">
+      <div class="svc-visual-inner sv-3">
+        <span class="sv-letter">U</span>
+      </div>
+    </div>
+    <div class="svc-content">
+      <span class="svc-index">03 — UI / UX Design</span>
+      <h2 class="svc-name">Interfaces users<br/><em>love.</em></h2>
+      <p class="svc-desc">User research, information architecture, wireframes, and polished Figma prototypes — delivered in a format your development team can build from immediately.</p>
+      <ul class="svc-items">
+        <li>User research & competitive audit</li>
+        <li>Information architecture & user flows</li>
+        <li>Low & high-fidelity wireframes</li>
+        <li>Interactive Figma prototypes</li>
+        <li>Design system & component library</li>
+        <li>Developer-ready handoff</li>
+      </ul>
+      <a class="svc-link" href="index.html#contact">Start a conversation →</a>
+      <p class="svc-starting">Starting from <strong>$599</strong></p>
+    </div>
+  </div>
+
+  <!-- 04 Presentation -->
+  <div class="svc-block alt reveal">
+    <div class="svc-visual">
+      <div class="svc-visual-inner sv-4">
+        <span class="sv-letter">P</span>
+      </div>
+    </div>
+    <div class="svc-content">
+      <span class="svc-index">04 — Presentation Design</span>
+      <h2 class="svc-name">Decks that<br/><em>win rooms.</em></h2>
+      <p class="svc-desc">Pitch decks, investor presentations, conference slides, and academic work — designed to communicate your ideas with clarity and visual authority.</p>
+      <ul class="svc-items">
+        <li>Pitch deck & investor presentations</li>
+        <li>Conference & keynote slides</li>
+        <li>Academic & research presentations</li>
+        <li>PowerPoint, Keynote, or Google Slides</li>
+        <li>Data visualisation & infographics</li>
+        <li>Source file always included</li>
+      </ul>
+      <a class="svc-link" href="index.html#contact">Start a conversation →</a>
+      <p class="svc-starting">Starting from <strong>$129</strong></p>
+    </div>
+  </div>
+
+</section>
+
+<!-- ADD-ONS -->
+<section class="addons">
+  <div class="addons-header reveal">
+    <p class="section-num">05</p>
+    <p class="section-label">Add-Ons</p>
+    <h2 class="big-title">More ways<br/><em>we help.</em></h2>
+  </div>
+  <div class="addons-grid">
+    <div class="addon-card reveal">
+      <div class="ac-icon">C</div>
+      <div class="ac-title">Copywriting</div>
+      <p class="ac-body">Brand voice, website copy, and campaign messaging that sounds like you — only sharper.</p>
+    </div>
+    <div class="addon-card reveal">
+      <div class="ac-icon">S</div>
+      <div class="ac-title">SEO Audit</div>
+      <p class="ac-body">Technical + on-page SEO review with an actionable priority list to improve your organic visibility.</p>
+    </div>
+    <div class="addon-card reveal">
+      <div class="ac-icon">M</div>
+      <div class="ac-title">Social Media Kit</div>
+      <p class="ac-body">Editable templates for Instagram, LinkedIn, and Facebook — stay on-brand without a designer on call.</p>
+    </div>
+    <div class="addon-card reveal">
+      <div class="ac-icon">R</div>
+      <div class="ac-title">Retainer Support</div>
+      <p class="ac-body">Monthly design and development support for ongoing updates, new pages, and continuous improvement.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS STRIP -->
+<section class="process-strip">
+  <div class="ps-header reveal">
+    <p class="section-num">06</p>
+    <p class="section-label">How It Works</p>
+    <h2 class="big-title">Five steps to<br/><em>launch.</em></h2>
+  </div>
+  <div class="ps-steps">
+    <div class="ps-step reveal">
+      <div class="ps-dot"></div>
+      <span class="ps-n">01</span>
+      <div class="ps-title">Discovery</div>
+      <p class="ps-desc">We talk through your goals, audience, budget, and timeline. No form-filling — real conversation.</p>
+    </div>
+    <div class="ps-step reveal">
+      <div class="ps-dot"></div>
+      <span class="ps-n">02</span>
+      <div class="ps-title">Proposal</div>
+      <p class="ps-desc">You receive a clear scope of work, timeline, and fixed price — no surprises, no hourly billing.</p>
+    </div>
+    <div class="ps-step reveal">
+      <div class="ps-dot"></div>
+      <span class="ps-n">03</span>
+      <div class="ps-title">Design</div>
+      <p class="ps-desc">We design, you review. Structured feedback rounds keep things focused and on schedule.</p>
+    </div>
+    <div class="ps-step reveal">
+      <div class="ps-dot"></div>
+      <span class="ps-n">04</span>
+      <div class="ps-title">Build</div>
+      <p class="ps-desc">Development happens in the open — you can review progress on a staging environment anytime.</p>
+    </div>
+    <div class="ps-step reveal">
+      <div class="ps-dot"></div>
+      <span class="ps-n">05</span>
+      <div class="ps-title">Launch</div>
+      <p class="ps-desc">We handle the go-live, test everything, and hand over clean files and documentation.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq">
+  <div class="faq-header reveal">
+    <p class="section-num">07</p>
+    <p class="section-label">Frequently Asked</p>
+    <h2 class="big-title">Common<br/><em>questions.</em></h2>
+  </div>
+  <div class="faq-list">
+    <div class="faq-item reveal" onclick="toggleFaq(this)">
+      <div class="faq-q">How long does a website project take? <span class="faq-icon">+</span></div>
+      <div class="faq-a"><p>A landing page typically takes 1–2 weeks. A full brand website runs 3–6 weeks depending on scope and how quickly content is supplied. Complex e-commerce projects are scoped individually.</p></div>
+    </div>
+    <div class="faq-item reveal" onclick="toggleFaq(this)">
+      <div class="faq-q">Do you work with clients outside the US? <span class="faq-icon">+</span></div>
+      <div class="faq-a"><p>Absolutely. The studio was built for international work — we collaborate with clients in Thailand, Southeast Asia, and across the US. All communication is available in English and Thai.</p></div>
+    </div>
+    <div class="faq-item reveal" onclick="toggleFaq(this)">
+      <div class="faq-q">What do you need from me to get started? <span class="faq-icon">+</span></div>
+      <div class="faq-a"><p>Usually just a brief conversation and any existing brand assets you have. We'll guide you through the rest with a structured intake questionnaire once the project is confirmed.</p></div>
+    </div>
+    <div class="faq-item reveal" onclick="toggleFaq(this)">
+      <div class="faq-q">Do you offer payment plans? <span class="faq-icon">+</span></div>
+      <div class="faq-a"><p>Yes. Most projects are split into a 50% deposit to begin and 50% on completion. For larger projects we can arrange milestone-based payments — just ask.</p></div>
+    </div>
+    <div class="faq-item reveal" onclick="toggleFaq(this)">
+      <div class="faq-q">Will I own everything when the project is done? <span class="faq-icon">+</span></div>
+      <div class="faq-a"><p>Yes. All final files, source files, and IP transfer to you upon final payment. We never hold projects hostage or require ongoing platform fees.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="svc-cta">
+  <div class="svc-cta-inner">
+    <h2 class="reveal">Let's build<br/>something<br/><em>great.</em></h2>
+    <p class="reveal">Tell me about your project — I respond within 24 hours and every enquiry gets a real, thoughtful reply.</p>
+    <a class="cta-btn reveal" href="index.html#contact">Start the Conversation</a>
+  </div>
+</section>
+
+<footer>
+  <a href="index.html" style="text-decoration:none;">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 120" width="80" height="32">
+      <text x="150" y="65" text-anchor="middle" font-family="'Fraunces', serif" font-size="52" font-weight="200" fill="#555550">What<tspan font-style="italic" fill="#9a7d3a"> Next</tspan></text>
+      <text x="153" y="100" text-anchor="middle" font-family="'Figtree', sans-serif" font-size="13" font-weight="300" letter-spacing="7" fill="#444440">Studios</text>
+      <circle cx="150" cy="115" r="2" fill="#9a7d3a"/>
+    </svg>
+  </a>
+  <div class="footer-copy">© 2025 What Next Studios — All rights reserved</div>
+  <div class="footer-links">
+    <a href="about.html">About</a>
+    <a href="work.html">Work</a>
+    <a href="index.html#contact">Contact</a>
+  </div>
+</footer>
+
+<script>
+  const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
+  function animRing(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing);}
+  animRing();
+  document.querySelectorAll('a,button,.faq-item,.addon-card').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{cursor.style.width='14px';cursor.style.height='14px';ring.style.width='52px';ring.style.height='52px';});
+    el.addEventListener('mouseleave',()=>{cursor.style.width='8px';cursor.style.height='8px';ring.style.width='36px';ring.style.height='36px';});
+  });
+  const obs=new IntersectionObserver(entries=>{entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*80);}});},{threshold:.08});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+  function toggleFaq(el){el.classList.toggle('open');}
+</script>
+</body>
+</html>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About — What Next Studios</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100;0,9..144,200;0,9..144,300;1,9..144,100;1,9..144,200;1,9..144,300&family=Figtree:wght@200;300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --black:#0a0a0a; --off-black:#111111; --dark:#1a1a1a; --grey:#2a2a2a;
+      --mid:#888888; --light:#c8c8c8; --white:#f5f5f0; --gold:#c9a84c; --gold-lt:#e2c06a;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--black);color:var(--white);font-family:'Figtree',sans-serif;font-weight:300;letter-spacing:.01em;overflow-x:clip;cursor:none;}
+    .cursor{position:fixed;width:8px;height:8px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .3s,height .3s;}
+    .cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(201,168,76,.4);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .12s ease;}
+    body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:1;opacity:.5;}
+
+    nav{position:fixed;top:0;width:100%;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:.8rem 3.5rem;}
+    .nav-logo{display:flex;align-items:center;line-height:1;text-decoration:none;}
+    .nav-links{display:flex;gap:2.5rem;list-style:none;}
+    .nav-links a{font-size:.65rem;font-weight:300;letter-spacing:.28em;text-transform:uppercase;color:var(--mid);text-decoration:none;transition:color .4s;}
+    .nav-links a:hover,.nav-links a.active{color:var(--gold);}
+    .nav-cta{font-size:.65rem;font-weight:300;letter-spacing:.24em;text-transform:uppercase;color:var(--black);background:var(--gold);padding:.6rem 1.4rem;text-decoration:none;transition:background .3s;}
+    .nav-cta:hover{background:var(--gold-lt);}
+
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity .9s ease,transform .9s ease;}
+    .reveal.visible{opacity:1;transform:translateY(0);}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+
+    /* HERO */
+    .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 3.5rem 5rem;position:relative;overflow:hidden;}
+    .hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(201,168,76,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,.04) 1px,transparent 1px);background-size:80px 80px;pointer-events:none;}
+    .hero-bg{position:absolute;top:50%;right:1rem;transform:translateY(-50%);font-family:'Fraunces',serif;font-size:26vw;font-weight:100;font-style:italic;font-variation-settings:'opsz' 144;color:transparent;-webkit-text-stroke:1px rgba(201,168,76,.06);line-height:1;pointer-events:none;user-select:none;}
+    .h-eyebrow{font-size:.6rem;font-weight:200;letter-spacing:.38em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem;opacity:0;animation:fadeUp 1s .3s forwards;}
+    .h-eyebrow::before{content:'';width:2.5rem;height:1px;background:var(--gold);}
+    .h-title{font-family:'Fraunces',serif;font-size:clamp(3.5rem,8vw,8rem);font-weight:200;line-height:.92;letter-spacing:-.03em;font-variation-settings:'opsz' 144;opacity:0;animation:fadeUp 1s .5s forwards;}
+    .h-title em{font-style:italic;color:var(--light);font-weight:100;}
+    .h-bottom{display:flex;justify-content:space-between;align-items:flex-end;margin-top:3rem;opacity:0;animation:fadeUp 1s .8s forwards;}
+    .h-desc{font-size:.85rem;font-weight:200;line-height:2.1;color:var(--mid);max-width:340px;letter-spacing:.02em;}
+
+    /* MANIFESTO */
+    .manifesto{padding:8rem 3.5rem;border-top:1px solid var(--grey);display:grid;grid-template-columns:1fr 2fr;gap:6rem;align-items:start;}
+    .manifesto-label{font-size:.58rem;font-weight:200;letter-spacing:.35em;text-transform:uppercase;color:var(--mid);margin-bottom:.5rem;}
+    .manifesto-num{font-size:.6rem;font-weight:200;letter-spacing:.35em;color:var(--gold);margin-bottom:.5rem;font-family:'Figtree',sans-serif;}
+    .manifesto-pull{font-family:'Fraunces',serif;font-size:clamp(2.2rem,4.5vw,4rem);font-weight:200;line-height:1.05;letter-spacing:-.025em;font-variation-settings:'opsz' 72;}
+    .manifesto-pull em{font-style:italic;color:var(--light);font-weight:100;}
+    .manifesto-body{font-size:.9rem;font-weight:200;line-height:2.2;color:var(--mid);letter-spacing:.02em;margin-bottom:2.5rem;}
+    .manifesto-body + .manifesto-body{margin-top:1.5rem;}
+
+    /* VALUES */
+    .values{padding:8rem 3.5rem;border-top:1px solid var(--grey);background:var(--off-black);}
+    .values-header{margin-bottom:5rem;}
+    .values-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--grey);}
+    .value-card{background:var(--off-black);padding:3rem 2.5rem;position:relative;overflow:hidden;transition:background .4s;}
+    .value-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:transparent;transition:background .4s;}
+    .value-card:hover{background:var(--dark);}
+    .value-card:hover::before{background:var(--gold);}
+    .vc-num{font-family:'Fraunces',serif;font-size:3.5rem;font-weight:100;font-style:italic;font-variation-settings:'opsz' 72;color:rgba(201,168,76,.15);line-height:1;margin-bottom:1.5rem;}
+    .vc-title{font-family:'Figtree',sans-serif;font-size:.95rem;font-weight:300;text-transform:uppercase;letter-spacing:.15em;color:var(--white);margin-bottom:1rem;}
+    .vc-body{font-size:.8rem;font-weight:200;line-height:2;color:var(--mid);letter-spacing:.02em;}
+
+    /* FOUNDER */
+    .founder{padding:8rem 3.5rem;border-top:1px solid var(--grey);display:grid;grid-template-columns:1fr 1fr;gap:8rem;align-items:center;}
+    .founder-img{aspect-ratio:3/4;background:var(--dark);border:1px solid var(--grey);position:relative;overflow:hidden;}
+    .founder-img::before{content:'T';font-family:'Fraunces',serif;font-size:24rem;font-weight:100;font-style:italic;font-variation-settings:'opsz' 144;color:rgba(201,168,76,.06);position:absolute;bottom:-3rem;right:-2rem;line-height:1;}
+    .founder-tag{position:absolute;top:0;right:0;background:var(--gold);color:var(--black);font-size:.58rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;padding:.4rem .9rem;}
+    .founder-label{position:absolute;bottom:1.5rem;left:1.5rem;font-size:.6rem;font-weight:300;letter-spacing:.2em;text-transform:uppercase;color:var(--mid);}
+    .founder-right{}
+    .founder-name{font-family:'Fraunces',serif;font-size:clamp(2.5rem,5vw,4.5rem);font-weight:200;line-height:.95;letter-spacing:-.03em;font-variation-settings:'opsz' 72;margin-bottom:.5rem;}
+    .founder-name em{font-style:italic;color:var(--light);font-weight:100;}
+    .founder-role{font-size:.62rem;font-weight:200;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:2.5rem;}
+    .founder-bio{font-size:.88rem;font-weight:200;line-height:2.2;color:var(--light);letter-spacing:.02em;margin-bottom:2rem;}
+    .founder-bio + .founder-bio{margin-top:1rem;}
+    .founder-skills{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:2rem;}
+    .skill-pill{font-size:.55rem;font-weight:200;letter-spacing:.22em;text-transform:uppercase;border:1px solid var(--grey);color:var(--mid);padding:.35rem .85rem;transition:all .3s;}
+    .skill-pill:hover{border-color:var(--gold);color:var(--gold);}
+
+    /* TIMELINE */
+    .timeline{padding:8rem 3.5rem;border-top:1px solid var(--grey);}
+    .timeline-header{margin-bottom:5rem;}
+    .tl-list{display:flex;flex-direction:column;}
+    .tl-item{display:grid;grid-template-columns:120px 1fr;gap:3rem;padding:2.5rem 0;border-bottom:1px solid var(--grey);position:relative;}
+    .tl-item:first-child{border-top:1px solid var(--grey);}
+    .tl-year{font-family:'Fraunces',serif;font-size:1.8rem;font-weight:100;font-style:italic;font-variation-settings:'opsz' 48;color:rgba(201,168,76,.4);line-height:1;padding-top:.2rem;}
+    .tl-content{}
+    .tl-title{font-family:'Figtree',sans-serif;font-size:1rem;font-weight:300;text-transform:uppercase;letter-spacing:.12em;color:var(--white);margin-bottom:.6rem;}
+    .tl-desc{font-size:.8rem;font-weight:200;line-height:2;color:var(--mid);letter-spacing:.02em;}
+    .tl-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);position:absolute;left:-3px;top:3rem;box-shadow:0 0 0 3px var(--black);}
+
+    /* FOOTER */
+    footer{border-top:1px solid var(--grey);padding:3rem 3.5rem;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2;}
+    .footer-copy{font-size:.6rem;font-weight:200;letter-spacing:.2em;color:var(--mid);}
+    .footer-links{display:flex;gap:2rem;}
+    .footer-links a{font-size:.6rem;font-weight:200;letter-spacing:.2em;text-transform:uppercase;color:var(--mid);text-decoration:none;transition:color .3s;}
+    .footer-links a:hover{color:var(--gold);}
+    .section-num{font-family:'Figtree',sans-serif;font-size:.6rem;font-weight:200;letter-spacing:.35em;color:var(--gold);margin-bottom:.5rem;}
+    .section-label{font-size:.58rem;font-weight:200;letter-spacing:.35em;text-transform:uppercase;color:var(--mid);margin-bottom:3rem;display:flex;align-items:center;gap:1rem;}
+    .section-label::after{content:'';flex:1;max-width:3rem;height:1px;background:var(--grey);}
+    .big-title{font-family:'Fraunces',serif;font-size:clamp(2.8rem,5.5vw,5rem);font-weight:200;line-height:.97;letter-spacing:-.025em;font-variation-settings:'opsz' 72;}
+    .big-title em{font-style:italic;color:var(--light);font-weight:100;font-variation-settings:'opsz' 72;}
+  </style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 120" width="90" height="36">
+      <text x="150" y="65" text-anchor="middle" font-family="'Fraunces', serif" font-size="52" font-weight="200" fill="#f5f5f0">What<tspan font-style="italic" fill="#c9a84c"> Next</tspan></text>
+      <text x="153" y="100" text-anchor="middle" font-family="'Figtree', sans-serif" font-size="13" font-weight="300" letter-spacing="7" fill="#888888">Studios</text>
+      <circle cx="150" cy="115" r="2" fill="#c9a84c"/>
+    </svg>
+  </a>
+  <ul class="nav-links">
+    <li><a href="about.html" class="active">About</a></li>
+    <li><a href="work.html">Work</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="blog.html">Insights</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+  <a class="nav-cta" href="index.html#contact">Start a Project</a>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-bg">A</div>
+  <p class="h-eyebrow">The Studio</p>
+  <h1 class="h-title">Design with<br/><em>intention.</em></h1>
+  <div class="h-bottom">
+    <p class="h-desc">What Next Studios is a one-person creative agency built on 15+ years of business experience and a relentless obsession with design that moves people.</p>
+  </div>
+</header>
+
+<!-- MANIFESTO -->
+<section class="manifesto">
+  <div class="reveal">
+    <p class="manifesto-num">01</p>
+    <p class="manifesto-label">Our Belief</p>
+  </div>
+  <div>
+    <h2 class="manifesto-pull reveal">Design is not<br/>decoration. It is<br/><em>strategy.</em></h2>
+    <br/>
+    <p class="manifesto-body reveal">What Next Studios was built on a simple idea: that every business deserves design that actually works — not just looks good on a mood board. We combine deep business intuition with craft-level execution to build digital experiences that convert, communicate, and endure.</p>
+    <p class="manifesto-body reveal">With roots in international hospitality, sales, and business development across Thailand and the United States, the studio brings a rare global perspective to every client relationship. We understand budgets, timelines, and human behavior — not just pixels.</p>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section class="values">
+  <div class="values-header reveal">
+    <p class="section-num">02</p>
+    <p class="section-label">What We Stand For</p>
+    <h2 class="big-title">The principles<br/>we design<br/><em>by.</em></h2>
+  </div>
+  <div class="values-grid">
+    <div class="value-card reveal">
+      <div class="vc-num">01</div>
+      <div class="vc-title">Clarity First</div>
+      <p class="vc-body">A beautiful design that confuses the user has failed. We start with communication, then layer aesthetics on top of substance.</p>
+    </div>
+    <div class="value-card reveal">
+      <div class="vc-num">02</div>
+      <div class="vc-title">Craft Over Speed</div>
+      <p class="vc-body">We don't rush. Every spacing decision, every typographic choice, every line of code is deliberate. Quality takes the time it takes.</p>
+    </div>
+    <div class="value-card reveal">
+      <div class="vc-num">03</div>
+      <div class="vc-title">Business Thinking</div>
+      <p class="vc-body">Your website isn't art — it's a business asset. We design with your conversion goals and long-term brand equity in mind.</p>
+    </div>
+    <div class="value-card reveal">
+      <div class="vc-num">04</div>
+      <div class="vc-title">Honest Dialogue</div>
+      <p class="vc-body">We'll tell you when an idea won't work. Clear, direct communication is how we protect your investment.</p>
+    </div>
+    <div class="value-card reveal">
+      <div class="vc-num">05</div>
+      <div class="vc-title">Global Sensibility</div>
+      <p class="vc-body">Shaped by experiences across Southeast Asia and North America, we bring cultural nuance and international standards to every project.</p>
+    </div>
+    <div class="value-card reveal">
+      <div class="vc-num">06</div>
+      <div class="vc-title">Continuous Growth</div>
+      <p class="vc-body">The tools and trends change constantly. We invest in learning so your work is always built on current best practice.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOUNDER -->
+<section class="founder">
+  <div class="founder-img reveal">
+    <div class="founder-tag">Founder</div>
+    <div class="founder-label">Fort Wayne, Indiana · USA</div>
+  </div>
+  <div class="reveal">
+    <h2 class="founder-name">Tony<br/><em>Paponpatch.</em></h2>
+    <p class="founder-role">Founder · Designer · Developer</p>
+    <p class="founder-bio">Tony spent over 15 years leading sales, operations, and brand development for international hospitality businesses in Thailand and the United States. That background gave him something most designers don't have: a deep understanding of how businesses actually work — and what design needs to do to serve them.</p>
+    <p class="founder-bio">Now based in Fort Wayne, Indiana, he runs What Next Studios as a boutique agency that combines senior business judgment with modern design and development craft. Currently completing a Software Development degree at Ivy Tech Community College, he brings a unique bridge between strategic thinking and technical execution.</p>
+    <div class="founder-skills">
+      <span class="skill-pill">Web Design</span>
+      <span class="skill-pill">Brand Identity</span>
+      <span class="skill-pill">UI / UX</span>
+      <span class="skill-pill">HTML / CSS / JS</span>
+      <span class="skill-pill">Python / Django</span>
+      <span class="skill-pill">Flask</span>
+      <span class="skill-pill">Presentation Design</span>
+      <span class="skill-pill">Thai · English</span>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="timeline">
+  <div class="timeline-header reveal">
+    <p class="section-num">04</p>
+    <p class="section-label">Background</p>
+    <h2 class="big-title">The road<br/>here was<br/><em>interesting.</em></h2>
+  </div>
+  <div class="tl-list">
+    <div class="tl-item reveal">
+      <div class="tl-year">2025</div>
+      <div class="tl-content">
+        <div class="tl-title">What Next Studios — Founded</div>
+        <p class="tl-desc">Launched a formal creative agency offering web design, branding, and digital services to clients across the US and Southeast Asia.</p>
+      </div>
+    </div>
+    <div class="tl-item reveal">
+      <div class="tl-year">2024</div>
+      <div class="tl-content">
+        <div class="tl-title">Software Development — Ivy Tech Community College</div>
+        <p class="tl-desc">Enrolled in a formal software development program, adding Python, Django, Flask, databases, and full-stack development to a design-first background.</p>
+      </div>
+    </div>
+    <div class="tl-item reveal">
+      <div class="tl-year">2020</div>
+      <div class="tl-content">
+        <div class="tl-title">Relocated to the United States</div>
+        <p class="tl-desc">Moved from Thailand to Fort Wayne, Indiana. Began translating hospitality and sales expertise into the American market while pivoting toward design and technology.</p>
+      </div>
+    </div>
+    <div class="tl-item reveal">
+      <div class="tl-year">2008</div>
+      <div class="tl-content">
+        <div class="tl-title">15 Years in Hospitality & International Sales</div>
+        <p class="tl-desc">Led business development, client relations, and brand management for hospitality brands across Thailand. Developed fluency in international sales, team leadership, and customer experience strategy.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <a href="index.html" style="text-decoration:none;">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 120" width="80" height="32">
+      <text x="150" y="65" text-anchor="middle" font-family="'Fraunces', serif" font-size="52" font-weight="200" fill="#555550">What<tspan font-style="italic" fill="#9a7d3a"> Next</tspan></text>
+      <text x="153" y="100" text-anchor="middle" font-family="'Figtree', sans-serif" font-size="13" font-weight="300" letter-spacing="7" fill="#444440">Studios</text>
+      <circle cx="150" cy="115" r="2" fill="#9a7d3a"/>
+    </svg>
+  </a>
+  <div class="footer-copy">© 2025 What Next Studios — All rights reserved</div>
+  <div class="footer-links">
+    <a href="about.html">About</a>
+    <a href="work.html">Work</a>
+    <a href="index.html#contact">Contact</a>
+  </div>
+</footer>
+
+<script>
+  const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
+  function animRing(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing);}
+  animRing();
+  document.querySelectorAll('a,button,.value-card,.skill-pill').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{cursor.style.width='14px';cursor.style.height='14px';ring.style.width='52px';ring.style.height='52px';});
+    el.addEventListener('mouseleave',()=>{cursor.style.width='8px';cursor.style.height='8px';ring.style.width='36px';ring.style.height='36px';});
+  });
+  const obs=new IntersectionObserver(entries=>{entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*80);}});},{threshold:.08});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

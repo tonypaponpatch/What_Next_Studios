@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact — What Next Studios</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100;0,9..144,200;0,9..144,300;1,9..144,100;1,9..144,200;1,9..144,300&family=Figtree:wght@200;300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root{--black:#0a0a0a;--off-black:#111111;--dark:#1a1a1a;--grey:#2a2a2a;--mid:#888888;--light:#c8c8c8;--white:#f5f5f0;--gold:#c9a84c;--gold-lt:#e2c06a;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--black);color:var(--white);font-family:'Figtree',sans-serif;font-weight:300;letter-spacing:.01em;overflow-x:clip;cursor:none;}
+
+    /* CURSOR */
+    .cursor{position:fixed;width:8px;height:8px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .3s,height .3s;}
+    .cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(201,168,76,.4);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .12s ease;}
+
+    /* NOISE */
+    body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:1;opacity:.5;}
+
+    /* NAV */
+    nav{position:fixed;top:0;width:100%;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:.8rem 3.5rem;}
+    .nav-logo{display:flex;align-items:center;line-height:1;text-decoration:none;}
+    .nav-links{display:flex;gap:2.5rem;list-style:none;}
+    .nav-links a{font-size:.65rem;font-weight:300;letter-spacing:.28em;text-transform:uppercase;color:var(--mid);text-decoration:none;transition:color .4s;}
+    .nav-links a:hover,.nav-links a.active{color:var(--gold);}
+    .nav-cta{font-size:.65rem;font-weight:300;letter-spacing:.24em;text-transform:uppercase;color:var(--black);background:var(--gold);padding:.6rem 1.4rem;text-decoration:none;transition:background .3s;}
+    .nav-cta:hover{background:var(--gold-lt);}
+
+    /* REVEAL */
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity .9s ease,transform .9s ease;}
+    .reveal.visible{opacity:1;transform:translateY(0);}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+
+    /* ── HERO ── */
+    .hero{
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* grid lines */
+    .hero::before{
+      content:'';position:absolute;inset:0;
+      background-image:linear-gradient(rgba(201,168,76,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,.04) 1px,transparent 1px);
+      background-size:80px 80px;pointer-events:none;
+    }
+
+    /* BIG background letter */
+    .hero-bg-letter{
+      position:absolute;top:50%;right:-2rem;transform:translateY(-50%);
+      font-family:'Fraunces',serif;font-size:55vw;font-weight:100;font-style:italic;
+      font-variation-settings:'opsz' 144;
+      color:transparent;-webkit-text-stroke:1px rgba(201,168,76,.05);
+      line-height:1;pointer-events:none;user-select:none;
+    }
+
+    /* LEFT — intro */
+    .hero-left{
+      display:flex;flex-direction:column;justify-content:flex-end;
+      padding:9rem 4rem 5rem 3.5rem;
+      border-right:1px solid var(--grey);
+      position:relative;z-index:2;
+    }
+    .h-eyebrow{
+      font-size:.6rem;font-weight:200;letter-spacing:.38em;text-transform:uppercase;
+      color:var(--gold);margin-bottom:1.5rem;
+      display:flex;align-items:center;gap:1rem;
+      opacity:0;animation:fadeUp 1s .3s forwards;
+    }
+    .h-eyebrow::before{content:'';width:2.5rem;height:1px;background:var(--gold);}
+    .h-title{
+      font-family:'Fraunces',serif;
+      font-size:clamp(3.5rem,6vw,7rem);
+      font-weight:200;line-height:.92;letter-spacing:-.03em;
+      font-variation-settings:'opsz' 144;
+      opacity:0;animation:fadeUp 1s .5s forwards;
+    }
+    .h-title em{font-style:italic;color:var(--light);font-weight:100;}
+
+    .h-channels{
+      margin-top:3.5rem;display:flex;flex-direction:column;gap:0;
+      opacity:0;animation:fadeUp 1s .7s forwards;
+      border-top:1px solid var(--grey);
+    }
+    .ch-item{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:1.4rem 0;border-bottom:1px solid var(--grey);
+      text-decoration:none;transition:padding-left .3s;
+      position:relative;overflow:hidden;
+    }
+    .ch-item::before{
+      content:'';position:absolute;left:0;top:0;width:0;height:100%;
+      background:linear-gradient(90deg,rgba(201,168,76,.06),transparent);
+      transition:width .5s;
+    }
+    .ch-item:hover::before{width:100%;}
+    .ch-item:hover{padding-left:.8rem;}
+    .ch-left{display:flex;flex-direction:column;gap:.3rem;}
+    .ch-label{font-size:.55rem;font-weight:200;letter-spacing:.3em;text-transform:uppercase;color:var(--mid);}
+    .ch-val{font-size:.9rem;font-weight:300;color:var(--white);letter-spacing:.02em;transition:color .3s;}
+    .ch-item:hover .ch-val{color:var(--gold);}
+    .ch-arrow{font-size:1rem;color:var(--grey);transition:color .3s,transform .3s;flex-shrink:0;}
+    .ch-item:hover .ch-arrow{color:var(--gold);transform:translateX(5px);}
+
+    .h-promise{
+      margin-top:3rem;
+      opacity:0;animation:fadeUp 1s .9s forwards;
+    }
+    .h-promise p{
+      font-size:.78rem;font-weight:200;line-height:2;color:var(--mid);
+      letter-spacing:.02em;
+      display:flex;align-items:flex-start;gap:.75rem;
+    }
+    .h-promise p::before{content:'✦';color:var(--gold);font-size:.5rem;flex-shrink:0;margin-top:.35rem;}
+
+    /* RIGHT — form */
+    .hero-right{
+      display:flex;flex-direction:column;justify-content:center;
+      padding:9rem 3.5rem 5rem 4rem;
+      position:relative;z-index:2;
+    }
+    .form-intro{margin-bottom:3rem;}
+    .form-intro-label{font-size:.58rem;font-weight:200;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;display:block;}
+    .form-intro-text{font-size:.88rem;font-weight:200;line-height:2.1;color:var(--mid);letter-spacing:.02em;}
+
+    /* FORM */
+    .contact-form{display:flex;flex-direction:column;gap:0;}
+    .cf-row{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-bottom:1px;}
+    .cf-group{display:flex;flex-direction:column;background:var(--off-black);padding:1.5rem 1.6rem 1.2rem;position:relative;transition:background .3s;}
+    .cf-group:focus-within{background:var(--dark);}
+    .cf-group:focus-within::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:var(--gold);}
+    .cf-label{font-size:.52rem;font-weight:300;letter-spacing:.28em;text-transform:uppercase;color:var(--mid);margin-bottom:.6rem;transition:color .3s;}
+    .cf-group:focus-within .cf-label{color:var(--gold);}
+    .cf-input{
+      background:transparent;border:none;outline:none;
+      color:var(--white);font-family:'Figtree',sans-serif;
+      font-size:.88rem;font-weight:200;letter-spacing:.03em;
+      padding:0;width:100%;
+    }
+    .cf-input::placeholder{color:rgba(136,136,136,.4);}
+    select.cf-input{cursor:none;appearance:none;}
+    .cf-select-wrap{position:relative;}
+    .cf-select-wrap::after{content:'↓';position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:.7rem;color:var(--mid);pointer-events:none;}
+    .cf-textarea{
+      background:transparent;border:none;outline:none;
+      color:var(--white);font-family:'Figtree',sans-serif;
+      font-size:.88rem;font-weight:200;letter-spacing:.03em;
+      resize:none;width:100%;min-height:120px;line-height:1.8;
+    }
+    .cf-textarea::placeholder{color:rgba(136,136,136,.4);}
+
+    /* service chips */
+    .cf-chips{display:flex;flex-wrap:wrap;gap:.5rem;padding:1.5rem 1.6rem 1.4rem;background:var(--off-black);margin-bottom:1px;}
+    .cf-chips-label{font-size:.52rem;font-weight:300;letter-spacing:.28em;text-transform:uppercase;color:var(--mid);width:100%;margin-bottom:.8rem;}
+    .chip{
+      font-size:.55rem;font-weight:200;letter-spacing:.2em;text-transform:uppercase;
+      border:1px solid var(--grey);color:var(--mid);
+      padding:.35rem .85rem;cursor:none;transition:all .25s;
+      user-select:none;
+    }
+    .chip.selected,.chip:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.06);}
+
+    /* budget row */
+    .cf-budget{display:flex;gap:1px;margin-bottom:1px;}
+    .budget-opt{
+      flex:1;padding:1.2rem 1rem;background:var(--off-black);
+      text-align:center;cursor:none;transition:background .25s;
+      display:flex;flex-direction:column;gap:.3rem;
+      border:1px solid transparent;
+    }
+    .budget-opt:hover,.budget-opt.selected{background:var(--dark);border-color:rgba(201,168,76,.3);}
+    .budget-opt.selected .bo-amount{color:var(--gold);}
+    .bo-amount{font-family:'Figtree',sans-serif;font-size:.85rem;font-weight:300;color:var(--light);transition:color .25s;}
+    .bo-label{font-size:.52rem;font-weight:200;letter-spacing:.2em;text-transform:uppercase;color:var(--mid);}
+
+    /* message area */
+    .cf-message{background:var(--off-black);padding:1.5rem 1.6rem 1.2rem;margin-bottom:1px;position:relative;transition:background .3s;}
+    .cf-message:focus-within{background:var(--dark);}
+    .cf-message:focus-within::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:var(--gold);}
+    .cf-message .cf-label{display:block;margin-bottom:.6rem;}
+
+    /* timeline */
+    .cf-timeline{display:flex;gap:1px;margin-bottom:1px;}
+    .tl-opt{flex:1;padding:1.2rem 1rem;background:var(--off-black);text-align:center;cursor:none;transition:background .25s;border:1px solid transparent;}
+    .tl-opt:hover,.tl-opt.selected{background:var(--dark);border-color:rgba(201,168,76,.3);}
+    .tl-opt.selected .tl-label{color:var(--gold);}
+    .tl-label{font-size:.6rem;font-weight:200;letter-spacing:.18em;text-transform:uppercase;color:var(--mid);transition:color .25s;}
+
+    /* submit */
+    .cf-submit-row{display:flex;align-items:center;justify-content:space-between;padding:2rem 0 0;}
+    .cf-submit{
+      display:inline-flex;align-items:center;gap:1rem;
+      font-family:'Figtree',sans-serif;font-size:.62rem;font-weight:300;
+      letter-spacing:.28em;text-transform:uppercase;
+      color:var(--black);background:var(--gold);
+      border:none;padding:1.1rem 2.5rem;cursor:none;
+      transition:background .3s,gap .3s;
+    }
+    .cf-submit:hover{background:var(--gold-lt);gap:1.4rem;}
+    .cf-submit-arrow{font-size:1rem;}
+    .cf-note{font-size:.62rem;font-weight:200;letter-spacing:.15em;color:var(--mid);line-height:1.7;}
+
+    /* SUCCESS STATE */
+    .success-overlay{
+      display:none;flex-direction:column;align-items:center;justify-content:center;
+      text-align:center;padding:4rem;
+      gap:1.5rem;
+    }
+    .success-overlay.show{display:flex;}
+    .success-icon{
+      font-family:'Fraunces',serif;font-size:5rem;font-weight:100;font-style:italic;
+      font-variation-settings:'opsz' 72;
+      color:var(--gold);line-height:1;
+    }
+    .success-title{
+      font-family:'Fraunces',serif;font-size:2.5rem;font-weight:200;
+      font-variation-settings:'opsz' 72;letter-spacing:-.02em;line-height:1;
+    }
+    .success-title em{font-style:italic;color:var(--light);font-weight:100;}
+    .success-body{font-size:.85rem;font-weight:200;line-height:2;color:var(--mid);max-width:340px;letter-spacing:.02em;}
+
+    /* ── FAQ STRIP ── */
+    .faq-strip{
+      border-top:1px solid var(--grey);
+      display:grid;grid-template-columns:1fr 1fr;
+      gap:0;position:relative;z-index:2;
+    }
+    .faq-left{
+      padding:6rem 4rem 6rem 3.5rem;
+      border-right:1px solid var(--grey);
+    }
+    .faq-right{padding:6rem 3.5rem 6rem 4rem;}
+    .faq-hl{font-size:.58rem;font-weight:200;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;}
+    .faq-title{font-family:'Fraunces',serif;font-size:clamp(2rem,3.5vw,3rem);font-weight:200;line-height:1;letter-spacing:-.025em;font-variation-settings:'opsz' 72;}
+    .faq-title em{font-style:italic;color:var(--light);font-weight:100;}
+    .faq-list{margin-top:3rem;display:flex;flex-direction:column;}
+    .faq-item{border-bottom:1px solid var(--grey);cursor:none;}
+    .faq-item:first-child{border-top:1px solid var(--grey);}
+    .faq-q{padding:1.5rem 0;display:flex;justify-content:space-between;align-items:center;font-size:.85rem;font-weight:300;color:var(--white);letter-spacing:.01em;}
+    .faq-icon{font-size:1.2rem;color:var(--gold);transition:transform .3s;flex-shrink:0;margin-left:1.5rem;}
+    .faq-item.open .faq-icon{transform:rotate(45deg);}
+    .faq-a{max-height:0;overflow:hidden;transition:max-height .5s ease,padding .5s ease;}
+    .faq-item.open .faq-a{max-height:200px;padding-bottom:1.5rem;}
+    .faq-a p{font-size:.8rem;font-weight:200;line-height:2;color:var(--mid);letter-spacing:.02em;}
+
+    /* ── FOOTER ── */
+    footer{border-top:1px solid var(--grey);padding:3rem 3.5rem;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2;}
+    .footer-copy{font-size:.6rem;font-weight:200;letter-spacing:.2em;color:var(--mid);}
+    .footer-links{display:flex;gap:2rem;}
+    .footer-links a{font-size:.6rem;font-weight:200;letter-spacing:.2em;text-transform:uppercase;color:var(--mid);text-decoration:none;transition:color .3s;}
+    .footer-links a:hover{color:var(--gold);}
+  </style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 120" width="90" height="36">
+      <text x="150" y="65" text-anchor="middle" font-family="'Fraunces', serif" font-size="52" font-weight="200" fill="#f5f5f0">What<tspan font-style="italic" fill="#c9a84c"> Next</tspan></text>
+      <text x="153" y="100" text-anchor="middle" font-family="'Figtree', sans-serif" font-size="13" font-weight="300" letter-spacing="7" fill="#888888">Studios</text>
+      <circle cx="150" cy="115" r="2" fill="#c9a84c"/>
+    </svg>
+  </a>
+  <ul class="nav-links">
+    <li><a href="about.html">About</a></li>
+    <li><a href="work.html">Work</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="blog.html">Insights</a></li>
+    <li><a href="contact.html" class="active">Contact</a></li>
+  </ul>
+  <a class="nav-cta" href="#form">Start a Project</a>
+</nav>
+
+<!-- HERO — 2 COLUMN SPLIT -->
+<section class="hero" id="form">
+  <div class="hero-bg-letter">C</div>
+
+  <!-- LEFT -->
+  <div class="hero-left">
+    <p class="h-eyebrow">Get in Touch</p>
+    <h1 class="h-title">Let's build<br/>something<br/><em>great.</em></h1>
+
+    <div class="h-channels">
+      <a class="ch-item" href="mailto:hello@whatnextstudios.com">
+        <div class="ch-left">
+          <span class="ch-label">Email</span>
+          <span class="ch-val">hello@whatnextstudios.com</span>
+        </div>
+        <span class="ch-arrow">→</span>
+      </a>
+      <a class="ch-item" href="#">
+        <div class="ch-left">
+          <span class="ch-label">Instagram</span>
+          <span class="ch-val">@whatnextstudios</span>
+        </div>
+        <span class="ch-arrow">→</span>
+      </a>
+      <a class="ch-item" href="#">
+        <div class="ch-left">
+          <span class="ch-label">LINE / WhatsApp</span>
+          <span class="ch-val">@whatnextstudios</span>
+        </div>
+        <span class="ch-arrow">→</span>
+      </a>
+      <a class="ch-item" href="#">
+        <div class="ch-left">
+          <span class="ch-label">LinkedIn</span>
+          <span class="ch-val">What Next Studios</span>
+        </div>
+        <span class="ch-arrow">→</span>
+      </a>
+    </div>
+
+    <div class="h-promise">
+      <p>Reply within 24 hours, every time.</p>
+      <p>Available in English and Thai — สื่อสารภาษาไทยได้เลย</p>
+      <p>Every enquiry gets a real, thoughtful response.</p>
+    </div>
+  </div>
+
+  <!-- RIGHT — FORM -->
+  <div class="hero-right reveal">
+
+    <div class="form-intro">
+      <span class="form-intro-label">Project Brief</span>
+      <p class="form-intro-text">Tell me about what you're building. The more detail you share, the more useful my first reply will be.</p>
+    </div>
+
+    <div id="formWrap">
+      <form class="contact-form" onsubmit="handleSubmit(event)" autocomplete="off">
+
+        <!-- Name + Email -->
+        <div class="cf-row">
+          <div class="cf-group">
+            <label class="cf-label">Your Name</label>
+            <input class="cf-input" type="text" placeholder="Full name" required/>
+          </div>
+          <div class="cf-group">
+            <label class="cf-label">Email</label>
+            <input class="cf-input" type="email" placeholder="you@email.com" required/>
+          </div>
+        </div>
+
+        <!-- Company + Location -->
+        <div class="cf-row" style="margin-top:1px;">
+          <div class="cf-group">
+            <label class="cf-label">Company / Brand</label>
+            <input class="cf-input" type="text" placeholder="Optional"/>
+          </div>
+          <div class="cf-group">
+            <label class="cf-label">Location</label>
+            <input class="cf-input" type="text" placeholder="City, Country"/>
+          </div>
+        </div>
+
+        <!-- Service chips -->
+        <div class="cf-chips" style="margin-top:1px;">
+          <span class="cf-chips-label">Service Needed (select all that apply)</span>
+          <div class="chip" onclick="toggleChip(this)">Brand Website</div>
+          <div class="chip" onclick="toggleChip(this)">E-Commerce</div>
+          <div class="chip" onclick="toggleChip(this)">Landing Page</div>
+          <div class="chip" onclick="toggleChip(this)">Brand Identity</div>
+          <div class="chip" onclick="toggleChip(this)">UI / UX Design</div>
+          <div class="chip" onclick="toggleChip(this)">Presentation</div>
+          <div class="chip" onclick="toggleChip(this)">Not sure yet</div>
+        </div>
+
+        <!-- Budget -->
+        <div class="cf-budget">
+          <div class="budget-opt" onclick="selectBudget(this)">
+            <span class="bo-amount">Under $500</span>
+            <span class="bo-label">Starter</span>
+          </div>
+          <div class="budget-opt" onclick="selectBudget(this)">
+            <span class="bo-amount">$500–$1k</span>
+            <span class="bo-label">Small</span>
+          </div>
+          <div class="budget-opt" onclick="selectBudget(this)">
+            <span class="bo-amount">$1k–$3k</span>
+            <span class="bo-label">Mid</span>
+          </div>
+          <div class="budget-opt" onclick="selectBudget(this)">
+            <span class="bo-amount">$3k+</span>
+            <span class="bo-label">Full</span>
+          </div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="cf-timeline" style="margin-top:1px;">
+          <div class="tl-opt" onclick="selectTimeline(this)"><span class="tl-label">ASAP</span></div>
+          <div class="tl-opt" onclick="selectTimeline(this)"><span class="tl-label">1–2 months</span></div>
+          <div class="tl-opt" onclick="selectTimeline(this)"><span class="tl-label">3–6 months</span></div>
+          <div class="tl-opt" onclick="selectTimeline(this)"><span class="tl-label">No rush</span></div>
+        </div>
+
+        <!-- Message -->
+        <div class="cf-message" style="margin-top:1px;">
+          <label class="cf-label">Tell me about your project</label>
+          <textarea class="cf-textarea" placeholder="What are you building? Who is it for? Any references or inspirations?"></textarea>
+        </div>
+
+        <!-- Submit row -->
+        <div class="cf-submit-row">
+          <div class="cf-note">
+            Your message goes directly to Tony.<br/>No bots, no ticket queues.
+          </div>
+          <button type="submit" class="cf-submit">
+            Send Message
+            <span class="cf-submit-arrow">→</span>
+          </button>
+        </div>
+
+      </form>
+
+      <!-- Success state -->
+      <div class="success-overlay" id="successOverlay">
+        <div class="success-icon">✓</div>
+        <h2 class="success-title">Message<br/><em>received.</em></h2>
+        <p class="success-body">Thanks for reaching out. I'll review your brief and reply within 24 hours with some initial thoughts.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FAQ STRIP -->
+<section class="faq-strip">
+  <div class="faq-left reveal">
+    <p class="faq-hl">Before You Write</p>
+    <h2 class="faq-title">Common<br/><em>questions.</em></h2>
+  </div>
+  <div class="faq-right">
+    <div class="faq-list">
+      <div class="faq-item reveal" onclick="toggleFaq(this)">
+        <div class="faq-q">How quickly will you reply? <span class="faq-icon">+</span></div>
+        <div class="faq-a"><p>Within 24 hours on weekdays, often much faster. Every message gets a real, considered response — not a template.</p></div>
+      </div>
+      <div class="faq-item reveal" onclick="toggleFaq(this)">
+        <div class="faq-q">Do you work with international clients? <span class="faq-icon">+</span></div>
+        <div class="faq-a"><p>Absolutely. The studio operates across US and Southeast Asia timezones. Communication in both English and Thai is available.</p></div>
+      </div>
+      <div class="faq-item reveal" onclick="toggleFaq(this)">
+        <div class="faq-q">What if I don't have a brief ready? <span class="faq-icon">+</span></div>
+        <div class="faq-a"><p>No problem at all. Just describe where you are and what you're trying to achieve. The brief takes shape through conversation.</p></div>
+      </div>
+      <div class="faq-item reveal" onclick="toggleFaq(this)">
+        <div class="faq-q">Do you take on small projects? <span class="faq-icon">+</span></div>
+        <div class="faq-a"><p>Yes. Landing pages start from $499 and presentation design from $129. No project is too small if the fit is right.</p></div>
+      </div>
+      <div class="faq-item reveal" onclick="toggleFaq(this)">
+        <div class="faq-q">Can I see more work samples? <span class="faq-icon">+</span></div>
+        <div class="faq-a"><p>Visit the Work page for the portfolio, or just ask in your message — I'm happy to share relevant case studies for your specific industry.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <a href="index.html" style="text-decoration:none;">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 120" width="80" height="32">
+      <text x="150" y="65" text-anchor="middle" font-family="'Fraunces', serif" font-size="52" font-weight="200" fill="#555550">What<tspan font-style="italic" fill="#9a7d3a"> Next</tspan></text>
+      <text x="153" y="100" text-anchor="middle" font-family="'Figtree', sans-serif" font-size="13" font-weight="300" letter-spacing="7" fill="#444440">Studios</text>
+      <circle cx="150" cy="115" r="2" fill="#9a7d3a"/>
+    </svg>
+  </a>
+  <div class="footer-copy">© 2025 What Next Studios — All rights reserved</div>
+  <div class="footer-links">
+    <a href="about.html">About</a>
+    <a href="work.html">Work</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</footer>
+
+<script>
+  // Cursor
+  const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
+  function animRing(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing);}
+  animRing();
+  document.querySelectorAll('a,button,.chip,.budget-opt,.tl-opt,.faq-item').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{cursor.style.width='14px';cursor.style.height='14px';ring.style.width='52px';ring.style.height='52px';});
+    el.addEventListener('mouseleave',()=>{cursor.style.width='8px';cursor.style.height='8px';ring.style.width='36px';ring.style.height='36px';});
+  });
+
+  // Reveal
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*80);}});
+  },{threshold:.08});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+  // Chips
+  function toggleChip(el){el.classList.toggle('selected');}
+
+  // Budget
+  function selectBudget(el){
+    document.querySelectorAll('.budget-opt').forEach(b=>b.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  // Timeline
+  function selectTimeline(el){
+    document.querySelectorAll('.tl-opt').forEach(t=>t.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  // FAQ
+  function toggleFaq(el){el.classList.toggle('open');}
+
+  // Submit
+  function handleSubmit(e){
+    e.preventDefault();
+    const form = e.target;
+    form.style.display='none';
+    document.getElementById('successOverlay').classList.add('show');
+  }
+</script>
+</body>
+</html>
